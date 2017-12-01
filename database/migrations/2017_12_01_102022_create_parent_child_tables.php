@@ -18,7 +18,7 @@ class CreateParentChildTables extends Migration
             $table->increments('id');
             $table->string('first_name', 30);
             $table->string('last_name', 30);
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('primary_phone', 20);
             $table->string('secondary_phone', 20)->nullable();
             $table->string('address', 100);
@@ -29,7 +29,10 @@ class CreateParentChildTables extends Migration
             $table->boolean('accept_rules')->default(0);
             $table->boolean('accept_video')->default(0);
             $table->boolean('accept_email')->default(0);
+            $table->string('year', 4);
             $table->timestamps();
+
+            $table->unique( ['email', 'year'] );
         });
 
         Schema::create('grades', function (Blueprint $table) {

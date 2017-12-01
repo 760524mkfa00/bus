@@ -11,6 +11,8 @@
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
         <!-- Styles -->
+            <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
         <style>
             html, body {
                 background-color: #fff;
@@ -20,6 +22,8 @@
                 height: 100vh;
                 margin: 0;
             }
+
+            body{ padding-top: 0;}
 
             .full-height {
                 height: 100vh;
@@ -80,7 +84,7 @@
                 <div class="title m-b-md">
                     School Bus Registration
                 </div>
-
+                <a class="btn btn-primary btn-lg btn-block" href="{!! route('parent_application') !!}" role="button">Begin Application</a>
             </div>
         </div>
     </body>

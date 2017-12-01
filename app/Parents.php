@@ -10,7 +10,9 @@ class Parents extends Model
     protected $table = "Parents";
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'primary_phone', 'secondary_phone', 'address', 'city', 'province', 'postal_code', 'comments', 'accept_rules', 'accept_video', 'accept_email'
+        'first_name', 'last_name', 'email', 'primary_phone',
+        'secondary_phone', 'address', 'city', 'province', 'postal_code',
+        'comments', 'accept_rules', 'accept_video', 'accept_email', 'year'
     ];
 
     /**
