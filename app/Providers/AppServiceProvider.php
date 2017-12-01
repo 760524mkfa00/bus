@@ -2,6 +2,7 @@
 
 namespace busRegistration\Providers;
 
+use busRegistration\Role;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
+        \View::composer('*', function($view) {
+            $roles = \Cache::rememberForever('roles', function() {
+                return Role::all();
+            });
+            $view->with('roles', array_pluck($roles, 'name', 'id'));
+        });
+
     }
 
     /**
