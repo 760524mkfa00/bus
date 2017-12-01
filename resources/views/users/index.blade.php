@@ -14,11 +14,9 @@
                     <div class="card-body">
                         <table class="table" id="table">
                             <thead class="thead-grey">
-                            <th scope="col">Employee #</th>
                             <th scope="col">First Name</th>
                             <th scope="col">Last Name</th>
                             <th scope="col">Email Address</th>
-                            <th scope="col">Route</th>
                             <th scope="col">User Role</th>
                             @can('update', busRegistration\User::class)
                                 <th scope="col" class="nosort">Edit</th>
@@ -30,11 +28,9 @@
                             <tbody>
                             @foreach($users as $user)
                                 <tr>
-                                    <td><strong> {!! $user->employee_number !!}</strong></td>
                                     <td><strong> {!! $user->first_name !!}</strong></td>
                                     <td><strong> {!! $user->last_name !!}</strong></td>
                                     <td><strong> {!! $user->email !!}</strong></td>
-                                    <td>{!! $user->route->route_number ?? '' !!}</td>
                                     <td>{!! $user->roles->first()->name ?? NULL !!}</td>
                                     @can('update',$user)
                                         <td class="hidden-xs" style="width:2%;">
@@ -76,24 +72,24 @@
                     }],
                     buttons: [
                         'pageLength',
-                        {
-                            extend: 'pdfHtml5',
-                            orientation: 'landscape',
-                            pageSize: 'LEGAL',
-                            exportOptions: {
-                                columns: [ 0, 1, 2, 3, 4 ]
-                            },
-                            customize : function(doc) {
-                                // doc.pageMargins = [10, 10, 10,10 ];
-                                doc.content[1].table.widths =
-                                    Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                            }
-                        },
+                        // {
+                        //     extend: 'pdfHtml5',
+                        //     orientation: 'landscape',
+                        //     pageSize: 'LEGAL',
+                        //     exportOptions: {
+                        //         columns: [ 0, 1, 2, 3 ]
+                        //     },
+                        //     customize : function(doc) {
+                        //         // doc.pageMargins = [10, 10, 10,10 ];
+                        //         doc.content[1].table.widths =
+                        //             Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                        //     }
+                        // },
                         {
                             extend: 'print',
                             orientation: 'landscape',
                             exportOptions: {
-                                columns: [ 0, 1, 2, 3, 4 ]
+                                columns: [ 0, 1, 2, 3 ]
                             },
                             customize: function ( win ) {
                                 $(win.document.body)
@@ -106,7 +102,7 @@
                                     .addClass( 'compact table-sm' )
                                     .css( 'font-size', 'inherit' );
                             }
-                        }
+                        },  'csv'
                     ],
                     paging: true,
                     pageLength: 120,

@@ -38,6 +38,7 @@ if (token) {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -54,8 +55,10 @@ if (token) {
 // });
 
 window.dt = require( 'datatables.net' );
-require( 'pdfmake/build/pdfmake.min.js' );
-require( 'datatables.net-bs4' )();
-require( 'datatables.net-buttons-bs4' )();
-require( 'datatables.net-buttons/js/buttons.html5.js' )();
-require( 'datatables.net-buttons/js/buttons.print.js' )();
+window.jszip = require('jszip');
+require( 'pdfmake/build/pdfmake.min' );
+require('pdfmake/build/vfs_fonts');
+require( 'datatables.net-bs4' );
+require( 'datatables.net-buttons-bs4' );
+require( 'datatables.net-buttons/js/buttons.html5' );
+require( 'datatables.net-buttons/js/buttons.print' );

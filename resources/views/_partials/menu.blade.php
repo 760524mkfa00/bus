@@ -10,8 +10,8 @@
         <ul class="navbar-nav mr-auto">
             @if (! Auth::guest())
 
-                <li class="nav-item"><a class="nav-link" href="/home">My Trips</a></li>
-                <li class="nav-item"><a class="nav-link" href="/overtime">Offered Overtime</a></li>
+                {{--<li class="nav-item"><a class="nav-link" href="/home">My Trips</a></li>--}}
+                {{--<li class="nav-item"><a class="nav-link" href="/overtime">Offered Overtime</a></li>--}}
 
 {{--                @can('update', bu\Trip::class)--}}
                     <li class="nav-item dropdown">
