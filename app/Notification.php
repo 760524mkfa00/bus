@@ -17,6 +17,6 @@ class Notification extends Model
      */
     public function parent()
     {
-        return $this->belongsTo('busRegistration\Parents', 'parent_id');
+        return $this->belongsTo('busRegistration\User', 'parent_id');
     }
 }

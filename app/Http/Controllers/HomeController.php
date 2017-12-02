@@ -2,6 +2,7 @@
 
 namespace busRegistration\Http\Controllers;
 
+use busRegistration\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        $user = User::with('children')->findOrFail(Auth()->id());
+        return view('home')
+            ->withUser($user);
+
     }
 }

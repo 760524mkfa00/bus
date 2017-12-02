@@ -13,27 +13,27 @@ class CreateParentChildTables extends Migration
      */
     public function up()
     {
-        Schema::create('parents', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->increments('id');
-            $table->string('first_name', 30);
-            $table->string('last_name', 30);
-            $table->string('email');
-            $table->string('primary_phone', 20);
-            $table->string('secondary_phone', 20)->nullable();
-            $table->string('address', 100);
-            $table->string('city', 50);
-            $table->string('province', 50);
-            $table->string('postal_code', 10);
-            $table->text('comments')->nullable();
-            $table->boolean('accept_rules')->default(0);
-            $table->boolean('accept_video')->default(0);
-            $table->boolean('accept_email')->default(0);
-            $table->string('year', 4);
-            $table->timestamps();
-
-            $table->unique( ['email', 'year'] );
-        });
+//        Schema::create('parents', function (Blueprint $table) {
+//            $table->engine = 'InnoDB';
+//            $table->increments('id');
+//            $table->string('first_name', 30);
+//            $table->string('last_name', 30);
+//            $table->string('email');
+//            $table->string('primary_phone', 20);
+//            $table->string('secondary_phone', 20)->nullable();
+//            $table->string('address', 100);
+//            $table->string('city', 50);
+//            $table->string('province', 50);
+//            $table->string('postal_code', 10);
+//            $table->text('comments')->nullable();
+//            $table->boolean('accept_rules')->default(0);
+//            $table->boolean('accept_video')->default(0);
+//            $table->boolean('accept_email')->default(0);
+//            $table->string('year', 4);
+//            $table->timestamps();
+//
+//            $table->unique( ['email', 'year'] );
+//        });
 
         Schema::create('grades', function (Blueprint $table) {
             $table->engine = 'InnoDB';
@@ -77,9 +77,10 @@ class CreateParentChildTables extends Migration
             $table->string('seat_assigned', 3)->default('no');
             $table->string('processed', 3)->default('no');
             $table->string('map_system_id')->nullable();
+            $table->string('year', 4);
             $table->timestamps();
 
-            $table->foreign('parent_id')->references('id')->on('parents')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('current_school_id')->references('id')->on('schools')->onDelete('cascade');
             $table->foreign('next_school_id')->references('id')->on('schools')->onDelete('cascade');
             $table->foreign('grade_id')->references('id')->on('grades')->onDelete('cascade');
@@ -102,7 +103,7 @@ class CreateParentChildTables extends Migration
             $table->string('notification');
             $table->timestamps();
 
-            $table->foreign('parent_id')->references('id')->on('parents')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('users')->onDelete('cascade');
         });
 
     }

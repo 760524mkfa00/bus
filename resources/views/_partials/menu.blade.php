@@ -13,7 +13,7 @@
                 {{--<li class="nav-item"><a class="nav-link" href="/home">My Trips</a></li>--}}
                 {{--<li class="nav-item"><a class="nav-link" href="/overtime">Offered Overtime</a></li>--}}
 
-{{--                @can('update', bu\Trip::class)--}}
+                @can('update', busRegistration\User::class)
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users</a>
                         <div class="dropdown-menu">
@@ -21,11 +21,7 @@
                             <a class="dropdown-item" href="{{ route('list_role') }}">Roles</a>
                         </div>
                     </li>
-
-                {{--@endcan--}}
-
-
-
+                @endcan
             @endif
         </ul>
 
@@ -34,8 +30,9 @@
             <!-- Authentication Links -->
             @if (Auth::guest())
                 <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                {{--<li><a href="{{ route('register') }}">Register</a></li>--}}
+                <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
             @else
+
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         {{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</a>

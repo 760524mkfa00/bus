@@ -19,7 +19,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password', 'primary_phone',
+        'secondary_phone', 'address', 'city', 'province', 'postal_code',
+        'comments', 'accept_rules', 'accept_video', 'accept_email'
     ];
 
     /**
@@ -30,6 +32,34 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'accept_rules' => 'boolean',
+        'accept_video' => 'boolean',
+        'accept_email' => 'boolean',
+    ];
+
+    /**
+     * Get the children for the parents.
+     */
+    public function children()
+    {
+        return $this->hasMany('busRegistration\Child', 'parent_id');
+    }
+
+    /**
+     * Get the notification for the parents.
+     */
+    public function notifications()
+    {
+        return $this->hasMany('busRegistration\Notification');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -71,6 +101,9 @@ class User extends Authenticatable
         return $query->where('active', '=', 'yes');
     }
 
-
+    public function scopeParent($query)
+    {
+        return $query->where($this->roles()->name == 'parent');
+    }
 
 }

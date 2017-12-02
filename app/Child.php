@@ -10,7 +10,7 @@ class Child extends Model
     protected $fillable = [
         'parent_id', 'first_name', 'last_name', 'address', 'city', 'province', 'postal_code', 'current_school_id',
         'next_school_id', 'grade_id', 'medical_information', 'international', 'int_start_date', 'int_end_date',
-        'paid', 'seat_assigned', 'processed', 'map_system_id'
+        'paid', 'seat_assigned', 'processed', 'map_system_id', 'year'
     ];
 
     protected $dates = [
@@ -23,7 +23,7 @@ class Child extends Model
      */
     public function parent()
     {
-        return $this->belongsTo('busRegistration\Parents');
+        return $this->belongsTo('busRegistration\User', 'parent_id');
     }
 
     /**

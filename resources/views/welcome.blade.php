@@ -84,7 +84,17 @@
                 <div class="title m-b-md">
                     School Bus Registration
                 </div>
-                <a class="btn btn-primary btn-lg btn-block" href="{!! route('parent_application') !!}" role="button">Begin Application</a>
+                <div class="row justify-content-center">
+                    <div class="col col-4">
+                        <a class="btn btn-primary btn-lg btn-block" href="{!! route('login') !!}" role="button">Login</a>
+                        <p>If you have previously registered using this website, click login to access the status of your application.</p>
+                    </div>
+                    <div class="col col-4">
+                        <a class="btn btn-primary btn-lg btn-block" href="{!! route('register') !!}" role="button">Register</a>
+                        <p>If you have never used this website to register for school busing. Please use the register button to register.</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </body>

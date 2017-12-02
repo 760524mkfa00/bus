@@ -2,6 +2,7 @@
 
 namespace busRegistration\Http\Controllers\Auth;
 
+use busRegistration\Role;
 use busRegistration\User;
 use busRegistration\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -36,8 +37,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('can:create,busRegistration\User');
+        $this->middleware('guest');
     }
 
     /**
@@ -51,9 +51,14 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:users|confirmed',
             'password' => 'required|min:6|confirmed',
-            'role' => 'required|exists:roles,id', // validating role
+            'primary_phone' => 'required|max:20',
+            'secondary_phone' => 'required|max:20',
+            'address' => 'required|max:50',
+            'city' => 'required|max:20',
+            'province' => 'required|max:20',
+            'postal_code' => 'required|max:20'
         ]);
     }
 
@@ -69,9 +74,17 @@ class RegisterController extends Controller
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'primary_phone' => $data['primary_phone'],
+            'secondary_phone' => $data['secondary_phone'],
+            'address' => $data['address'],
+            'city' => $data['city'],
+            'province' => $data['province'],
+            'postal_code' => $data['postal_code']
         ]);
-        $user->roles()->attach($data['role']);
+
+//        Role::where('name', '=', 'parent');
+        $user->roles()->attach(Role::where('slug', '=', 'parent')->pluck('id'));
         return $user;
     }
 }

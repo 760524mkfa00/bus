@@ -21,6 +21,16 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password', 60);
             $table->string('active', 3)->default('yes');
+            $table->string('primary_phone', 20);
+            $table->string('secondary_phone', 20)->nullable();
+            $table->string('address', 100);
+            $table->string('city', 50);
+            $table->string('province', 50);
+            $table->string('postal_code', 10);
+            $table->text('comments')->nullable();
+            $table->boolean('accept_rules')->default(0);
+            $table->boolean('accept_video')->default(0);
+            $table->boolean('accept_email')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

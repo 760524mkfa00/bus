@@ -69,15 +69,12 @@ Route::group(['prefix' => 'users/roles'], function () {
 });
 
 
-Route::group(['prefix' => 'application'], function () {
+Route::group(['prefix' => 'student'], function () {
 
-    Route::get('/', 'application\applicationController@parentApplication')
-        ->name('parent_application');
+    Route::get('/create', 'application\applicationController@registerStudent')
+        ->name('student_create');
 
-    Route::post('/store', 'application\applicationController@storeParent')
-        ->name('store_parent');
-
-    Route::get('/children', 'application\applicationController@childrenApplication')
-        ->name('children_application');
+    Route::post('/store', 'application\applicationController@storeStudent')
+        ->name('store_student');
 
 });
