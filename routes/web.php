@@ -77,6 +77,10 @@ Route::group(['prefix' => 'student'], function () {
     Route::post('/store', 'application\applicationController@storeStudent')
         ->name('store_student');
 
+    Route::get('/list', 'admin\StudentsController@index')
+        ->name('list_student')
+        ->middleware('can:view,busRegistration\Child');
+
 });
 
 

@@ -45,6 +45,21 @@ class User extends Authenticatable
         'accept_email' => 'boolean',
     ];
 
+    public function setAcceptRulesAttribute($value)
+    {
+        $this->attributes['accept_rules'] = ($value === 'on') ? 1 : 0;
+    }
+
+    public function setAcceptVideoAttribute($value)
+    {
+        $this->attributes['accept_video'] = ($value === 'on') ? 1 : 0;
+    }
+
+    public function setAcceptEmailAttribute($value)
+    {
+        $this->attributes['accept_email'] = ($value === 'on') ? 1 : 0;
+    }
+
     /**
      * Get the children for the parents.
      */
@@ -104,6 +119,11 @@ class User extends Authenticatable
     public function scopeParent($query)
     {
         return $query->where($this->roles()->name == 'parent');
+    }
+
+    public function fullName()
+    {
+        return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
     }
 
 }

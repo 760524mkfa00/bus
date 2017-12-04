@@ -58,7 +58,10 @@ class RegisterController extends Controller
             'address' => 'required|max:50',
             'city' => 'required|max:20',
             'province' => 'required|max:20',
-            'postal_code' => 'required|max:20'
+            'postal_code' => 'required|max:20',
+            'accept_rules' => 'required|accepted',
+            'accept_video' => 'required|accepted',
+            'accept_email' => 'required|accepted',
         ]);
     }
 
@@ -70,6 +73,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+
+//        dd($data);
         $user = User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
@@ -80,7 +85,10 @@ class RegisterController extends Controller
             'address' => $data['address'],
             'city' => $data['city'],
             'province' => $data['province'],
-            'postal_code' => $data['postal_code']
+            'postal_code' => $data['postal_code'],
+            'accept_rules' => $data['accept_rules'],
+            'accept_video' => $data['accept_video'],
+            'accept_email' => $data['accept_email'],
         ]);
 
 //        Role::where('name', '=', 'parent');
