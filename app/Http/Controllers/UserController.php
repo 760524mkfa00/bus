@@ -61,7 +61,9 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, user $user)
     {
-        $data = $request->only('first_name', 'last_name', 'email', 'active');
+        $data = $request->only('first_name', 'last_name', 'email', 'active','primary_phone',
+        'secondary_phone', 'address', 'city', 'province', 'postal_code',
+        'comments', 'accept_rules', 'accept_video', 'accept_email');
         $user->fill($data)->save();
         $user->roles()->sync($request->get('role'));
         return redirect()->route('list_users');
