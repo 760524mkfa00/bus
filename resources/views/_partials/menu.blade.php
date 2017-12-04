@@ -22,6 +22,15 @@
                         </div>
                     </li>
                 @endcan
+
+                @can('view', busRegistration\School::class)
+                    <li class="nav-item"><a class="nav-link" href="{{ route('list_school') }}">Schools</a></li>
+                @endcan
+
+                @can('view', busRegistration\Grade::class)
+                    <li class="nav-item"><a class="nav-link" href="{{ route('list_grade') }}">Grades</a></li>
+                @endcan
+
             @endif
         </ul>
 

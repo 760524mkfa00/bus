@@ -78,3 +78,44 @@ Route::group(['prefix' => 'student'], function () {
         ->name('store_student');
 
 });
+
+
+Route::group(['prefix' => 'schools'], function () {
+    
+    Route::get('/', 'SchoolController@index')
+        ->name('list_school')
+        ->middleware('can:view,busRegistration\School');
+
+    Route::get('/create', 'SchoolController@create')
+        ->name('create_school')
+        ->middleware('can:create,busRegistration\School');
+
+    Route::post('/store', 'SchoolController@store')
+        ->name('store_school')
+        ->middleware('can:create,busRegistration\School');
+
+    Route::get('/remove/{school}', 'SchoolController@destroy')
+        ->name('remove_school')
+        ->middleware('can:remove,busRegistration\School');
+
+});
+
+Route::group(['prefix' => 'grades'], function () {
+
+    Route::get('/', 'GradeController@index')
+        ->name('list_grade')
+        ->middleware('can:view,busRegistration\Grade');
+
+    Route::get('/create', 'GradeController@create')
+        ->name('create_grade')
+        ->middleware('can:create,busRegistration\Grade');
+
+    Route::post('/store', 'GradeController@store')
+        ->name('store_grade')
+        ->middleware('can:create,busRegistration\Grade');
+
+    Route::get('/remove/{grade}', 'GradeController@destroy')
+        ->name('remove_grade')
+        ->middleware('can:remove,busRegistration\Grade');
+
+});
