@@ -55,9 +55,7 @@ class Child extends Model
      */
     public function tags()
     {
-        return $this->belongsToMany('busRegistration\Tag', 'children_tags');
+        return $this->belongsToMany('busRegistration\Tag', 'children_tags', 'children_id');
     }
-
-
 
 }

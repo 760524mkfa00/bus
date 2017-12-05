@@ -23,20 +23,34 @@
                                 </th>
                             </thead>
                             <tbody>
+                            @can('remove', busRegistration\Grade::class)
                                 @foreach($grading as $grade)
                                     <tr>
                                         <td><strong> {!! $grade->id !!}</strong></td>
                                         <td><strong> {!! $grade->grade !!}</strong></td>
                                         <td>
-                                            @can('remove', $grade)
+
                                                 <a title="Remove" href="{!! URL::route('remove_grade', $grade->id) !!}"
                                                     class="float-right"><i class="fa fa-times"></i>
-                                                <a>
-                                            @endcan
+                                                </a>
+
                                         </td>
                                     </tr>
 
                                 @endforeach
+                            @endcan
+
+                            @cannot('remove', busRegistration\Grade::class)
+                                @foreach($grading as $grade)
+                                    <tr>
+                                        <td><strong> {!! $grade->id !!}</strong></td>
+                                        <td><strong> {!! $grade->grade !!}</strong></td>
+                                        <td>
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endcan
                             </tbody>
                         </table>
                     </div>

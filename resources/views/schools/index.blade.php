@@ -23,20 +23,28 @@
                                 </th>
                             </thead>
                             <tbody>
+                            @can('remove', busRegistration\School::class)
                                 @foreach($buildings as $school)
                                     <tr>
                                         <td><strong> {!! $school->id !!}</strong></td>
                                         <td><strong> {!! $school->school !!}</strong></td>
-                                        <td> 
-                                            @can('remove', $school)
-                                                <a title="Remove" href="{!! URL::route('remove_school', $school->id) !!}"
-                                                    class="float-right"><i class="fa fa-times"></i>
-                                                <a>
-                                            @endcan
+                                        <td>
+                                            <a title="Remove" href="{!! URL::route('remove_school', $school->id) !!}"
+                                                class="float-right"><i class="fa fa-times"></i>
+                                            </a>
                                         </td>
                                     </tr>
-                                    
                                 @endforeach
+                            @endcan
+                            @cannot('remove', busRegistration\School::class)
+                                @foreach($buildings as $school)
+                                    <tr>
+                                        <td><strong> {!! $school->id !!}</strong></td>
+                                        <td><strong> {!! $school->school !!}</strong></td>
+                                        <td></td>
+                                    </tr>
+                                @endforeach
+                            @endcan
                             </tbody>
                         </table>
                     </div>

@@ -25,7 +25,7 @@ class HomeController extends Controller
     public function index()
     {
 
-        $user = User::with('children')->findOrFail(Auth()->id());
+        $user = User::with('children', 'children.currentSchool', 'children.grade', 'children.nextSchool' )->findOrFail(Auth()->id());
         return view('home')
             ->withUser($user);
 

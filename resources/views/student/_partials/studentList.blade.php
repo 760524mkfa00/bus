@@ -11,13 +11,13 @@
             <th scope="col">Name</th>
             <th scope="col">Sib</th>
             <th scope="col">School</th>
-            <th scope="col">Seat</th>
-            <th scope="col">International</th>
-            <th scope="col">Processed</th>
-            @can('create', busRegistration\Child::class)
-                <th scope="col" class="nosort">Edit</th>
-                <th scope="col" class="nosort">Remove</th>
-            @endcan
+            <th class="nosort" scope="col">Seat</th>
+            <th class="nosort" scope="col">International</th>
+            <th class="nosort" scope="col">Processed</th>
+            {{--@can('create', busRegistration\Child::class)--}}
+                {{--<th scope="col" class="nosort">Edit</th>--}}
+                {{--<th scope="col" class="nosort">Remove</th>--}}
+            {{--@endcan--}}
             </thead>
             <tbody>
                 @include('student._partials._partials.listLoop')

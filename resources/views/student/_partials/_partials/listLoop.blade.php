@@ -2,7 +2,7 @@
     @foreach($students as $student)
         <tr>
             <td>
-                <strong>{!! $student->first_name . ' ' . $student->last_name !!}</strong><br>
+                <a title="Edit" href="{{ route('edit_student', [$student->parent->id, $student->id]) }}"><strong>{!! $student->first_name . ' ' . $student->last_name !!}</strong></a><br>
                 <span class="small">> {!! $student->parent->fullName() !!}</span>
             </td>
             <td><strong> {!! $student->parent->children->count() !!}</strong></td>
@@ -10,19 +10,6 @@
             <td>{!! ucfirst($student->seat_assigned) !!}</td>
             <td>{!! ucfirst($student->international) !!}</td>
             <td>{!! ucfirst($student->processed) !!}</td>
-
-                <td class="hidden-xs" style="width:2%;">
-                    <a title="Edit"
-                       href="#"
-                       class="pull-right"><i class="fa fa-pencil-square-o fa"></i>
-                    </a>
-                </td>
-                <td class="hidden-xs" style="width:2%;">
-                    <a title="Remove"
-                       href=""
-                       class="pull-right"><i class="fa fa-times"></i>
-                    </a>
-                </td>
         </tr>
     @endforeach
 @endcan

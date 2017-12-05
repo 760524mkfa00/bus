@@ -38,6 +38,10 @@ Route::group(['prefix' => 'users'], function () {
         ->name('remove_user')
         ->middleware('can:update,user');
 
+    Route::get('/update/{user}', 'admin\ParentController@update')
+        ->name('update_parent')
+        ->middleware('can:create,user');
+
 });
 
 Route::group(['prefix' => 'users/roles'], function () {
@@ -80,6 +84,10 @@ Route::group(['prefix' => 'student'], function () {
     Route::get('/list', 'admin\StudentsController@index')
         ->name('list_student')
         ->middleware('can:view,busRegistration\Child');
+
+    Route::get('/edit/{user}/{child}', 'admin\StudentsController@edit')
+        ->name('edit_student')
+        ->middleware('can:create,busRegistration\Child');
 
 });
 
