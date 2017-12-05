@@ -37,7 +37,7 @@ class ApplicationController extends Controller
             "international" => $data['international'],
             "int_start_date" => $data['int_start_date'],
             "int_end_date" => $data['int_end_date'],
-            "year" => 2017,
+            "year" => config('app.year'),
         ]);
 
         return redirect()->route('home');

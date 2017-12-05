@@ -202,6 +202,9 @@
                             <button type="submit" class="btn btn-primary">
                                 Register Student
                             </button>
+                            <a role="button" href="{{ route('home') }}" class="btn btn-primary">
+                                Cancel
+                            </a>
                         </form>
                     </div>
                 </div>

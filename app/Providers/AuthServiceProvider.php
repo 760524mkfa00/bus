@@ -15,6 +15,9 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         'busRegistration\User' => 'busRegistration\Policies\UserPolicy',
         'busRegistration\Role' => 'busRegistration\Policies\RolePolicy',
+        'busRegistration\School' => 'busRegistration\Policies\SchoolPolicy',
+        'busRegistration\Grade' => 'busRegistration\Policies\GradePolicy',
+        'busRegistration\Child' => 'busRegistration\Policies\StudentPolicy',
     ];
 
     /**

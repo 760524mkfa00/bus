@@ -79,9 +79,6 @@
                                                name="password_confirmation" required>
                                     </div>
 
-
-                                </div>
-                                <div class="col">
                                     <div class="form-group{{ $errors->has('primary_phone') ? ' has-error' : '' }}">
                                         <label for="primary_phone">Primary Phone</label>
 
@@ -107,6 +104,9 @@
                                     </span>
                                         @endif
                                     </div>
+
+                                </div>
+                                <div class="col">
 
                                     <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
                                         <label for="address">Address</label>
@@ -158,6 +158,27 @@
                                         <strong>{{ $errors->first('postal_code') }}</strong>
                                     </span>
                                         @endif
+                                    </div>
+
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input"
+                                                   name="accept_rules" {{ old('accept_rules') ? 'checked' : '' }}> We have read and discussed the School Bus Safety Rules and accept the expectations as a condition for school bus transportation.
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input"
+                                                   name="accept_email" {{ old('accept_email') ? 'checked' : '' }}> I accept that School District #23 send me, via email, information about school bussing.
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input"
+                                                   name="accept_video" {{ old('accept_video') ? 'checked' : '' }}> We understand that video surveillance equipment is used on school buses.
+                                        </label>
                                     </div>
                                 </div>
                             </div>
