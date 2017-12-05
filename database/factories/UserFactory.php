@@ -17,9 +17,27 @@ $factory->define(busRegistration\User::class, function (Faker $faker) {
     static $password;
 
     return [
-        'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'primary_phone' => $faker->phoneNumber,
+        'secondary_phone' => $faker->phoneNumber,
+        'address' => $faker->streetAddress,
+        'city' => $faker->randomElement(['Kelowna', 'West Kelowna', 'Lake Country']),
+        'province' => 'BC',
+        'postal_code' => $faker->postcode,
+        'comments' => 'none',
+        'accept_rules'  => 1,
+        'accept_video'  => 1,
+        'accept_email' => 1,
+    ];
+});
+
+$factory->define(busRegistration\User::class, function (Faker $faker) {
+    static $password;
+
+    return [
+
     ];
 });

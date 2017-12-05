@@ -21,8 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password', 60);
             $table->string('active', 3)->default('yes');
-            $table->string('primary_phone', 20);
-            $table->string('secondary_phone', 20)->nullable();
+            $table->string('primary_phone', 30);
+            $table->string('secondary_phone', 30)->nullable();
             $table->string('address', 100);
             $table->string('city', 50);
             $table->string('province', 50);
