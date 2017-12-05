@@ -1,5 +1,6 @@
 <?php
 
+
 use Faker\Generator as Faker;
 
 /*
@@ -31,13 +32,5 @@ $factory->define(busRegistration\User::class, function (Faker $faker) {
         'accept_rules'  => 1,
         'accept_video'  => 1,
         'accept_email' => 1,
-    ];
-});
-
-$factory->define(busRegistration\User::class, function (Faker $faker) {
-    static $password;
-
-    return [
-
     ];
 });

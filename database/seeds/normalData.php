@@ -29,7 +29,6 @@ class normalData extends Seeder
         ]);
 
         DB::table('schools')->insert([
-            ['school' => 'Kindergarten'],
             ['school' => 'A S Matheson Elementary'],
             ['school' => 'Anne McClymont Elementary'],
             ['school' => 'Anne McClymont Primary'],
@@ -77,10 +76,10 @@ class normalData extends Seeder
         ]);
 
         DB::table('roles')->insert([
-            ['name' => 'Parent', 'slug' => 'parent', 'permissions' => ['read-only'=> true],
-            ['name' => 'Manager', 'slug' => 'manager', 'permissions' => ['read-only'=> true],
-            ['name' => 'User', 'slug' => 'user', 'permissions' => ['read-only'=> true],
-            ['name' => 'Admin', 'slug' => 'admin', 'permissions' => ['read-only'=> true],
+            ['name' => 'Parent', 'slug' => 'parent', 'permissions' => '{"read-only": true}'],
+            ['name' => 'Manager', 'slug' => 'manager', 'permissions' => '{"read-only": true}'],
+            ['name' => 'User', 'slug' => 'user', 'permissions' => '{"read-only": true}'],
+            ['name' => 'Admin', 'slug' => 'admin', 'permissions' => '{"add-role": true, "view-role": true, "list-grade": true, "create-user": true, "list-school": true, "remove-role": true, "update-user": true, "create-grade": true, "list-student": true, "remove-grade": true, "store-school": true, "create-school": true, "remove-school": true, "store-student": true, "update-school": true, "add-permission": true, "create-student": true, "remove-student": true, "remove-permission": true}']
         ]);
     }
 }
