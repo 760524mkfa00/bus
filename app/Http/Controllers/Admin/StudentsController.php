@@ -20,7 +20,7 @@ class StudentsController extends Controller
     public function index()
     {
 
-        $child = Child::with('parent')->get();
+        $child = Child::with('parent', 'parent.children', 'nextSchool', 'grade')->get();
 
 //        dd($child);
         return view('student.index')

@@ -3,6 +3,7 @@
 namespace busRegistration\Http\Controllers;
 
 use busRegistration\Http\Requests\UpdateUserRequest;
+use busRegistration\Role;
 use busRegistration\User;
 use Illuminate\Http\Request;
 
