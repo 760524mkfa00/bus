@@ -75,5 +75,12 @@ class normalData extends Seeder
             ['school' => 'Storefront'],
             ['school' => 'Watson Road Elementary'],
         ]);
+
+        DB::table('roles')->insert([
+            ['name' => 'Parent', 'slug' => 'parent', 'permissions' => ['read-only'=> true],
+            ['name' => 'Manager', 'slug' => 'manager', 'permissions' => ['read-only'=> true],
+            ['name' => 'User', 'slug' => 'user', 'permissions' => ['read-only'=> true],
+            ['name' => 'Admin', 'slug' => 'admin', 'permissions' => ['read-only'=> true],
+        ]);
     }
 }
