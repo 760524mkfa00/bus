@@ -89,6 +89,10 @@ Route::group(['prefix' => 'student'], function () {
         ->name('edit_student')
         ->middleware('can:create,busRegistration\Child');
 
+    Route::post('/update/{user}/{child}', 'admin\StudentsController@update')
+        ->name('update_student')
+        ->middleware('can:create,busRegistration\Child');
+
 });
 
 

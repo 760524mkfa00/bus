@@ -4,8 +4,8 @@
         <div class="row">
             <div class="col">
                 <form action="{!! route('update_parent', $user) !!}">
+                    {{ csrf_field() }}
                     <address>
-
                         <div class="form-group row">
                             <label for="first_name" class="col-sm-3 col-form-label col-form-label-sm">First Name</label>
                             <div class="col-sm-9">
@@ -13,6 +13,7 @@
                                        value="{{ $user->first_name }}" required autofocus>
                             </div>
                         </div>
+
                         <div class="form-group row">
                             <label for="last_name" class="col-sm-3 col-form-label col-form-label-sm">Last Name</label>
                             <div class="col-sm-9">

@@ -39,4 +39,35 @@ class StudentsController extends Controller
             ->withCurrentChild($child);
     }
 
+    public function update(User $user, Child $child, Request $request)
+    {
+
+        $this->saveStudent($user, $child, $request->all());
+
+        $student = Child::find($request->get('child_id'));
+
+        return \Redirect::route('edit_student', [$user, $student]);
+    }
+
+
+    public function saveStudent(User $parent, Child $child,$data)
+    {
+
+        $child->update([
+            "first_name" => $data['first_name'],
+            "last_name" => $data['last_name'],
+            "grade_id" => $data['grade_id'],
+            "current_school_id" => $data['current_school_id'],
+            "next_school_id" => $data['next_school_id'],
+            "address" => $data['address'] ?? $parent->address,
+            "city" => $data['city'] ?? $parent->city,
+            "province" => $data['province'] ?? $parent->province,
+            "postal_code" => $data['postal_code'] ?? $parent->postal_code,
+            "international" => $data['international'],
+//            "int_start_date" => $data['int_start_date'],
+//            "int_end_date" => $data['int_end_date'],
+        ]);
+
+    }
+
 }
