@@ -3,6 +3,7 @@
 namespace busRegistration\Http\Controllers\Admin;
 
 use busRegistration\Child;
+use busRegistration\Http\Requests\UpdateStudentRequest;
 use busRegistration\User;
 use Illuminate\Http\Request;
 use busRegistration\Http\Controllers\Controller;
@@ -39,12 +40,12 @@ class StudentsController extends Controller
             ->withCurrentChild($child);
     }
 
-    public function update(User $user, Child $child, Request $request)
+    public function update(User $user, Child $child, UpdateStudentRequest $updateStudentRequest)
     {
 
-        $this->saveStudent($user, $child, $request->all());
+        $this->saveStudent($user, $child, $updateStudentRequest->all());
 
-        $student = Child::find($request->get('child_id'));
+        $student = Child::find($updateStudentRequest->get('child_id'));
 
         return \Redirect::route('edit_student', [$user, $student]);
     }
@@ -64,8 +65,8 @@ class StudentsController extends Controller
             "province" => $data['province'] ?? $parent->province,
             "postal_code" => $data['postal_code'] ?? $parent->postal_code,
             "international" => $data['international'],
-//            "int_start_date" => $data['int_start_date'],
-//            "int_end_date" => $data['int_end_date'],
+            "int_start_date" => $data['int_start_date'] ?? NULL,
+            "int_end_date" => $data['int_end_date'] ?? NULL,
         ]);
 
     }
