@@ -2,6 +2,7 @@
 
 namespace busRegistration\Http\Controllers\Auth;
 
+use busRegistration\Mail\UserRegistered;
 use busRegistration\Role;
 use busRegistration\User;
 use busRegistration\Http\Controllers\Controller;
@@ -74,7 +75,6 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
 
-//        dd($data);
         $user = User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
@@ -91,8 +91,11 @@ class RegisterController extends Controller
             'accept_email' => $data['accept_email'],
         ]);
 
-//        Role::where('name', '=', 'parent');
+
         $user->roles()->attach(Role::where('slug', '=', 'parent')->pluck('id'));
+
+        \Mail::to($user)->send(new UserRegistered($user));
+
         return $user;
     }
 }

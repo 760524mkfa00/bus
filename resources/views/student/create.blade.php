@@ -196,6 +196,16 @@
                                         @endif
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="medical_information" class="form-label">Medical Information</label>
+                                        <textarea id="medical_information" class="form-control" name="medical_information">{{ old('medical_information') }}</textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="student_note" class="form-label">Student Notes</label>
+                                        <textarea id="student_note" class="form-control" name="student_note">{{ old('student_note') }}</textarea>
+                                    </div>
+
                                 </div>
                             </div>
 
