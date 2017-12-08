@@ -67,6 +67,8 @@ class StudentsController extends Controller
             "international" => $data['international'],
             "int_start_date" => $data['int_start_date'] ?? NULL,
             "int_end_date" => $data['int_end_date'] ?? NULL,
+            "medical_information" => $data['medical_information'],
+            "student_note" => $data['student_note']
         ]);
 
     }

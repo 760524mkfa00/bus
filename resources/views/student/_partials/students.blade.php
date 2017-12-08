@@ -52,6 +52,14 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <label for="map_system_id" class="col-sm-3 col-form-label">Map Sys ID</label>
+                        <div class="col-sm-9">
+                            <input id="map_system_id" type="text" class="form-control" name="map_system_id"
+                                   value="{{ $currentChild->map_system_id }}">
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="col-4">
@@ -89,15 +97,33 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="international" class="col-sm-3 col-form-label">international</label>
+                        <label for="international" class="col-sm-3 col-form-label">International</label>
                         <div class="col-sm-9">
-                            <select class="form-control" name="international">
+                            <select id='international' class="form-control" name="international">
                                 <option value="yes" {{ ($currentChild->international === 'yes') ? 'selected' : '' }}>Yes</option>
                                 <option value="no" {{ ($currentChild->international === 'no') ? 'selected' : '' }}>No</option>
                             </select>
                         </div>
                     </div>
+
+                    <div class="form-group row international-block" style="{{ ($currentChild->international === 'yes') ? '' : 'display:none' }};">
+                        <label for="int_start_date" class="col-sm-3 col-form-label">Int Start</label>
+                        <div class="col-sm-9">
+                            <input id="int_start_date" type="int_start_date" class="form-control" name="int_start_date"
+                                   value="{{ $currentChild->int_start_date }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group row international-block" style="{{ ($currentChild->international === 'yes') ? '' : 'display:none' }};">
+                        <label for="int_end_date" class="col-sm-3 col-form-label">Int End</label>
+                        <div class="col-sm-9">
+                            <input id="int_end_date" type="int_end_date" class="form-control" name="int_end_date"
+                                   value="{{ $currentChild->int_end_date }}">
+                        </div>
+                    </div>
                 </div>
+
+
 
                 <div class="col-4">
                     <div class="form-group row">
@@ -129,11 +155,34 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label for="created_at" class="col-sm-3 col-form-label">Created</label>
+                        <div class="col-sm-9">
+                            <input id="created_at" type="text" class="form-control" name="created_at"
+                                   value="{{ $currentChild->created_at }}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="updated_at" class="col-sm-3 col-form-label">Updated</label>
+                        <div class="col-sm-9">
+                            <input id="updated_at" type="text" class="form-control" name="updated_at"
+                                   value="{{ $currentChild->updated_at }}" readonly>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="medical_information" class="form-label">Medical Information</label>
+                <textarea id="medical_information" class="form-control" name="medical_information">{{ $currentChild->medical_information }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="student_note" class="form-label">Student Notes</label>
+                <textarea id="student_note" class="form-control" name="student_note">{{ $currentChild->student_note }}</textarea>
+            </div>
         </form>
-
-
-
     </div>
 </div>

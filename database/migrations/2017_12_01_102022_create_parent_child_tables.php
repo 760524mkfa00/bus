@@ -70,6 +70,7 @@ class CreateParentChildTables extends Migration
             $table->integer('next_school_id')->unsigned();
             $table->integer('grade_id')->unsigned();
             $table->text('medical_information')->nullable();
+            $table->text('student_note')->nullable();
             $table->string('international', 3)->default('no');
             $table->dateTime('int_start_date')->nullable();
             $table->dateTime('int_end_date')->nullable();

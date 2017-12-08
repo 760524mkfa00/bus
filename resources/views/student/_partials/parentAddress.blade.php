@@ -74,6 +74,14 @@
                                        value="{{ $user->email }}">
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label for="comments" class="col-sm-3 col-form-label col-form-label-sm">Comments</label>
+                            <div class="col-sm-9">
+                                <textarea id="comments" type="text" class="form-control form-control-sm" name="comments">{{ $user->comments }}"</textarea>
+                            </div>
+                        </div>
+
                     </address>
 
                     <button type="submit" class="btn btn-primary btn-sm float-right">

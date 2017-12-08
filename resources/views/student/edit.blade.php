@@ -13,3 +13,20 @@
         </div>
     </div>
 @endsection
+
+
+@section('footer')
+    <script>
+        jQuery(document).ready(function() {
+           $('#international').change(function() {
+                var select = this.value;
+                if (select === 'yes')
+                //  ^
+                    $('.international-block').fadeIn('slow');
+                else
+                    $('.international-block').fadeOut('slow');
+            })
+        });
+    </script>
+
+@endsection
