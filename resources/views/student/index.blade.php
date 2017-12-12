@@ -59,7 +59,7 @@
                         },  'csv'
                     ],
                     paging: true,
-                    pageLength: 120,
+                    pageLength: 30,
                     lengthMenu: [
                         [15, 30, 60, 120, -1],
                         ['15 Rows', '30 Rows', '60 Rows', '120 Rows', 'Show All']

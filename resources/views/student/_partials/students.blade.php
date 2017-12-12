@@ -139,7 +139,7 @@
                     <div class="form-group row">
                         <label for="seat_assigned" class="col-sm-3 col-form-label">Seat</label>
                         <div class="col-sm-9">
-                            <select class="form-control" name="seat_assigned">
+                            <select class="form-control" name="seat_assigned" id="seat-assigned">
                                 <option value="yes" {{ ($currentChild->seat_assigned === 'yes') ? 'selected' : '' }}>Yes</option>
                                 <option value="no" {{ ($currentChild->seat_assigned === 'no') ? 'selected' : '' }}>No</option>
                             </select>
@@ -149,11 +149,18 @@
                     <div class="form-group row">
                         <label for="processed" class="col-sm-3 col-form-label">Processed</label>
                         <div class="col-sm-9">
-                            <select class="form-control" name="processed">
+                            <select class="form-control" name="processed" id="processed">
                                 <option value="yes" {{ ($currentChild->processed === 'yes') ? 'selected' : '' }}>Yes</option>
                                 <option value="no" {{ ($currentChild->processed === 'no') ? 'selected' : '' }}>No</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="form-check clearfix">
+                        <label class="form-check-label float-right email-no-seat" style="display: none;">
+                            <input type="checkbox" class="form-check-input"
+                                   name="no-bus" {{ old('no-bus') ? 'checked' : '' }}> Email - No seat at this time.
+                        </label>
                     </div>
 
                     <div class="form-group row">
@@ -183,6 +190,10 @@
                 <label for="student_note" class="form-label">Student Notes</label>
                 <textarea id="student_note" class="form-control" name="student_note">{{ $currentChild->student_note }}</textarea>
             </div>
+
+            <button type="submit" name="updateStudent" value="true" class="btn btn-primary float-right">
+                Update Student
+            </button>
         </form>
     </div>
 </div>

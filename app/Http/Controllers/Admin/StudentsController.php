@@ -4,6 +4,8 @@ namespace busRegistration\Http\Controllers\Admin;
 
 use busRegistration\Child;
 use busRegistration\Http\Requests\UpdateStudentRequest;
+use busRegistration\Mail\noSeat;
+use busRegistration\Notification;
 use busRegistration\User;
 use Illuminate\Http\Request;
 use busRegistration\Http\Controllers\Controller;
@@ -43,9 +45,27 @@ class StudentsController extends Controller
     public function update(User $user, Child $child, UpdateStudentRequest $updateStudentRequest)
     {
 
+//        dd($updateStudentRequest->all());
+
         $this->saveStudent($user, $child, $updateStudentRequest->all());
 
         $student = Child::find($updateStudentRequest->get('child_id'));
+
+        if($updateStudentRequest->get('no-bus')) {
+            \Mail::to($user)->send(new noSeat($user, $student));
+
+            // Add this to parent notification
+            Notification::create([
+                'parent_id' => $user->id,
+                'notification' => 'No Seat Email Sent'
+            ]);
+        }
+
+
+
+        if($updateStudentRequest->get('updateStudent')) {
+            return \Redirect::route('list_student');
+        }
 
         return \Redirect::route('edit_student', [$user, $student]);
     }
@@ -64,6 +84,8 @@ class StudentsController extends Controller
             "city" => $data['city'] ?? $parent->city,
             "province" => $data['province'] ?? $parent->province,
             "postal_code" => $data['postal_code'] ?? $parent->postal_code,
+            "seat_assigned" => $data['seat_assigned'],
+            "processed" => $data['processed'],
             "international" => $data['international'],
             "int_start_date" => $data['int_start_date'] ?? NULL,
             "int_end_date" => $data['int_end_date'] ?? NULL,

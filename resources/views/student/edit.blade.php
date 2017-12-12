@@ -25,7 +25,19 @@
                     $('.international-block').fadeIn('slow');
                 else
                     $('.international-block').fadeOut('slow');
-            })
+            });
+
+            $('#processed, #seat-assigned').change(function() {
+                var select = this.value;
+                var hasSeat = $('#seat-assigned').find(":selected").val();
+
+                if((select == 'yes') && (hasSeat == 'no')) {
+                    $('.email-no-seat').fadeIn('slow');
+                } else {
+                    $('.email-no-seat').fadeOut('slow');
+                }
+           });
+
         });
     </script>
 
