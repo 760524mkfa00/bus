@@ -25,7 +25,10 @@
         ],
         "psr-4": {
             "busRegistration\\": "app/"
-        }
+        },
+      "files": [
+        "app/Http/PaymentGateway/mpgClasses.php"
+      ]
     },
     "autoload-dev": {
         "psr-4": {
