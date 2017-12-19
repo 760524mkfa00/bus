@@ -17,16 +17,6 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('list_student') }}">Student</a></li>
                 @endcan
 
-                @can('update', busRegistration\User::class)
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ route('list_users') }}">Users</a>
-                            <a class="dropdown-item" href="{{ route('list_role') }}">Roles</a>
-                        </div>
-                    </li>
-                @endcan
-
                 @can('view', busRegistration\School::class)
                     <li class="nav-item"><a class="nav-link" href="{{ route('list_school') }}">Schools</a></li>
                 @endcan
@@ -39,6 +29,15 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('list_tag') }}">Tags</a></li>
                 @endcan
 
+                @can('update', busRegistration\User::class)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ route('list_users') }}">Users</a>
+                            <a class="dropdown-item" href="{{ route('list_role') }}">Roles</a>
+                        </div>
+                    </li>
+                @endcan
             @endif
         </ul>
 

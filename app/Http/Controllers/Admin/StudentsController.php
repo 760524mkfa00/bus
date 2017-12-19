@@ -37,6 +37,7 @@ class StudentsController extends Controller
                 $filter['international'] = $searchValue['international'] ?? '';
                 $filter['processed'] = $searchValue['processed'] ?? '';
                 $filter['tag'] = $searchValue['tag'] ?? '';
+                $filter['created_at'] = $searchValue['created_at'] ?? '';
             }
 
         }
@@ -45,13 +46,14 @@ class StudentsController extends Controller
 
         $child = Child::with('parent', 'parent.children', 'nextSchool', 'grade')
             ->whereHas('parent', function ( $query ) use ($filter) {
-                $query->Phone($filter['phone']);
+                if($filter['phone']) $query->Phone($filter['phone']);
             })->searchSeat($filter['seat'])
             ->searchPaid($filter['paid'])
             ->searchSubsidy($filter['subsidy'])
             ->searchInternational($filter['international'])
             ->searchProcessed($filter['processed'])
             ->searchTag($filter['tag'])
+            ->searchCreated($filter['created_at'])
             ->get();
 
 //        dd($child);

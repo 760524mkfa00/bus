@@ -58,7 +58,7 @@
 
             <h6><strong>Date</strong></h6>
             <div class="form-group" style="margin-bottom: 0.5rem;">
-                <input type="text" class="form-control" placeholder="Created Date" name="created_at" id="created_at">
+                <input type="text" class="form-control" placeholder="Created Date" name="created_at" id="created_at" value="{{ \Session::get('searchValues')['created_at'] ?? '' }}">
             </div>
             {{--<div class="form-group" style="margin-bottom: 0.5rem;">--}}
                 {{--<input type="text" class="form-control" placeholder="Notification Date" name="notification_date">--}}

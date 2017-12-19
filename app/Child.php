@@ -95,4 +95,11 @@ class Child extends Model
         })->get();
     }
 
+    public function scopeSearchCreated($query, $created)
+    {
+
+        if ($created) $query->whereDate('created_at', $created);
+
+    }
+
 }
