@@ -9,6 +9,8 @@
                     <option value="{{ $child->id }}" {{ ($child->id === $currentChild->id) ? 'selected' : '' }}>{{ $child->first_name . ' ' . $child->last_name }}</option>
                 @endforeach
             </select>
+
+{{--            {{ $currentChild }}--}}
             <hr />
             <div class="row">
                 <div class="col-4">
@@ -181,15 +183,32 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="medical_information" class="form-label">Medical Information</label>
-                <textarea id="medical_information" class="form-control" name="medical_information">{{ $currentChild->medical_information }}</textarea>
+            <div class="row">
+                <div class="col-8">
+                    <div class="form-group">
+                        <label for="medical_information" class="form-label">Medical Information</label>
+                        <textarea id="medical_information" class="form-control" name="medical_information">{{ $currentChild->medical_information }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="student_note" class="form-label">Student Notes</label>
+                        <textarea id="student_note" class="form-control" name="student_note">{{ $currentChild->student_note }}</textarea>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="processed" class="form-label">Tags</label>
+                        <select class="form-control" multiple='multiple' name="tag[]" id="tag" size="8">
+                            @foreach($tagList as $id => $tag)
+                                <option value="{{ $id }}" {{ (in_array($id, $selectedTags)) ? ' selected="selected"' : '' }}>{{ $tag }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="student_note" class="form-label">Student Notes</label>
-                <textarea id="student_note" class="form-control" name="student_note">{{ $currentChild->student_note }}</textarea>
-            </div>
+
 
             <button type="submit" name="updateStudent" value="true" class="btn btn-primary float-right">
                 Update Student

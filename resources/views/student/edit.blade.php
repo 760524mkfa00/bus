@@ -39,6 +39,11 @@
            });
 
         });
+
+        $('#tag').select2({
+            placeholder: 'Choose a tag'
+        });
+
     </script>
 
 @endsection

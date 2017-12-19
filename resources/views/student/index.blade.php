@@ -66,6 +66,11 @@
                     ]
                 });
             });
+
+            $( "#created_at" ).datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+
         });
     </script>
 

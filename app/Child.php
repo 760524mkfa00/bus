@@ -10,7 +10,7 @@ class Child extends Model
     protected $fillable = [
         'parent_id', 'first_name', 'last_name', 'address', 'city', 'province', 'postal_code', 'current_school_id',
         'next_school_id', 'grade_id', 'medical_information', 'international', 'int_start_date', 'int_end_date',
-        'paid', 'seat_assigned', 'processed', 'map_system_id', 'year', 'student_note'
+        'paid', 'seat_assigned', 'processed', 'map_system_id', 'year', 'student_note', 'subsidy'
     ];
 
     protected $dates = [
@@ -56,6 +56,43 @@ class Child extends Model
     public function tags()
     {
         return $this->belongsToMany('busRegistration\Tag', 'children_tags', 'children_id');
+    }
+
+    /**
+     * This section is the scopes for searching on the students index screen
+     */
+
+    public function scopeSearchSeat($query, $seat)
+    {
+        if ($seat) $query->where('seat_assigned', $seat);
+    }
+
+    public function scopeSearchPaid($query, $paid)
+    {
+        if ($paid) $query->where('paid', $paid);
+    }
+
+    public function scopeSearchSubsidy($query, $subsidy)
+    {
+        if ($subsidy) $query->where('subsidy', $subsidy);
+    }
+
+    public function scopeSearchInternational($query, $international)
+    {
+        if ($international) $query->where('international', $international);
+    }
+
+    public function scopeSearchProcessed($query, $processed)
+    {
+        if ($processed) $query->where('processed', $processed);
+    }
+
+    // Could be multiple tags
+    public function scopeSearchTag($query, $tag)
+    {
+        if ($tag) $query->whereHas('tags',  function($query) use ($tag) {
+            $query->where('id', '=', $tag);
+        })->get();
     }
 
 }

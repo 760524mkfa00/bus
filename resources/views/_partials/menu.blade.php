@@ -35,6 +35,10 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('list_grade') }}">Grades</a></li>
                 @endcan
 
+                @can('view', busRegistration\Tag::class)
+                    <li class="nav-item"><a class="nav-link" href="{{ route('list_tag') }}">Tags</a></li>
+                @endcan
+
             @endif
         </ul>
 

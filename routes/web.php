@@ -135,3 +135,23 @@ Route::group(['prefix' => 'grades'], function () {
         ->middleware('can:remove,busRegistration\Grade');
 
 });
+
+Route::group(['prefix' => 'tags'], function () {
+
+    Route::get('/', 'TagController@index')
+        ->name('list_tag')
+        ->middleware('can:view,busRegistration\Tag');
+
+    Route::get('/create', 'TagController@create')
+        ->name('create_tag')
+        ->middleware('can:create,busRegistration\Tag');
+
+    Route::post('/store', 'TagController@store')
+        ->name('store_tag')
+        ->middleware('can:create,busRegistration\Tag');
+
+    Route::get('/remove/{tag}', 'TagController@destroy')
+        ->name('remove_tag')
+        ->middleware('can:remove,busRegistration\Tag');
+
+});

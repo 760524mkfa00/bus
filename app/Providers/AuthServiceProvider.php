@@ -18,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
         'busRegistration\School' => 'busRegistration\Policies\SchoolPolicy',
         'busRegistration\Grade' => 'busRegistration\Policies\GradePolicy',
         'busRegistration\Child' => 'busRegistration\Policies\StudentPolicy',
+        'busRegistration\Tag' => 'busRegistration\Policies\TagPolicy',
     ];
 
     /**

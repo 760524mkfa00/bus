@@ -5,6 +5,7 @@ namespace busRegistration\Providers;
 use busRegistration\Grade;
 use busRegistration\Role;
 use busRegistration\School;
+use busRegistration\Tag;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
                 return Grade::all();
             });
             $view->with('grades', array_pluck($grades, 'grade', 'id'));
+        });
+
+        \View::composer('*', function($view) {
+            $tags = \Cache::rememberForever('tags', function() {
+                return Tag::all();
+            });
+            $view->with('tagList', array_pluck($tags, 'tag', 'id'));
         });
 
     }

@@ -10,7 +10,7 @@ window._ = require('lodash');
 try {
     window.$ = window.jQuery = require('jquery');
     window.Popper = require('popper.js').default;
-
+    require('jquery-ui/ui/widgets/datepicker.js');
     require('bootstrap');
 } catch (e) {}
 
@@ -53,6 +53,7 @@ if (token) {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+
 
 window.dt = require( 'datatables.net' );
 window.jszip = require('jszip');

@@ -2,13 +2,14 @@
 
 namespace busRegistration\Http\Controllers\Admin;
 
+use Session;
+use busRegistration\User;
 use busRegistration\Child;
-use busRegistration\Http\Requests\UpdateStudentRequest;
+use Illuminate\Http\Request;
 use busRegistration\Mail\noSeat;
 use busRegistration\Notification;
-use busRegistration\User;
-use Illuminate\Http\Request;
 use busRegistration\Http\Controllers\Controller;
+use busRegistration\Http\Requests\UpdateStudentRequest;
 
 class StudentsController extends Controller
 {
@@ -24,7 +25,34 @@ class StudentsController extends Controller
     public function index()
     {
 
-        $child = Child::with('parent', 'parent.children', 'nextSchool', 'grade')->get();
+        if(!$filter = \Request::all())
+        {
+            if (Session::exists('searchValues')) {
+                $searchValue = Session::get('searchValues');
+
+                $filter['phone'] = $searchValue['phone'] ?? '';
+                $filter['seat'] = $searchValue['seat'] ?? '';
+                $filter['paid'] = $searchValue['paid'] ?? '';
+                $filter['subsidy'] = $searchValue['subsidy'] ?? '';
+                $filter['international'] = $searchValue['international'] ?? '';
+                $filter['processed'] = $searchValue['processed'] ?? '';
+                $filter['tag'] = $searchValue['tag'] ?? '';
+            }
+
+        }
+        Session::put('searchValues', $filter);
+
+
+        $child = Child::with('parent', 'parent.children', 'nextSchool', 'grade')
+            ->whereHas('parent', function ( $query ) use ($filter) {
+                $query->Phone($filter['phone']);
+            })->searchSeat($filter['seat'])
+            ->searchPaid($filter['paid'])
+            ->searchSubsidy($filter['subsidy'])
+            ->searchInternational($filter['international'])
+            ->searchProcessed($filter['processed'])
+            ->searchTag($filter['tag'])
+            ->get();
 
 //        dd($child);
         return view('student.index')
@@ -37,15 +65,16 @@ class StudentsController extends Controller
 
         $user = $user->with('children', 'children.nextSchool', 'children.currentSchool', 'children.grade', 'children.tags', 'notifications')->find($user->id);
 
+        $selected = $child->tags->pluck('id')->toArray();
+
         return view('student.edit')
             ->withUser($user)
-            ->withCurrentChild($child);
+            ->withCurrentChild($child)
+            ->withSelectedTags($selected);
     }
 
     public function update(User $user, Child $child, UpdateStudentRequest $updateStudentRequest)
     {
-
-//        dd($updateStudentRequest->all());
 
         $this->saveStudent($user, $child, $updateStudentRequest->all());
 
@@ -60,8 +89,6 @@ class StudentsController extends Controller
                 'notification' => 'No Seat Email Sent'
             ]);
         }
-
-
 
         if($updateStudentRequest->get('updateStudent')) {
             return \Redirect::route('list_student');
@@ -92,6 +119,10 @@ class StudentsController extends Controller
             "medical_information" => $data['medical_information'],
             "student_note" => $data['student_note']
         ]);
+
+        $child->tags()->sync($data['tag']);
+
+        Return $child;
 
     }
 
