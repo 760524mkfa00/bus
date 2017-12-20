@@ -119,10 +119,15 @@ class StudentsController extends Controller
             "int_start_date" => $data['int_start_date'] ?? NULL,
             "int_end_date" => $data['int_end_date'] ?? NULL,
             "medical_information" => $data['medical_information'],
-            "student_note" => $data['student_note']
+            "student_note" => $data['student_note'],
+            "amount" => $data['amount'] ?? 0.00
         ]);
 
-        $child->tags()->sync($data['tag']);
+        if (isset($data['tag'])) {
+            $child->tags()->sync($data['tag']);
+        } else {
+            $child->tags()->detach();
+        }
 
         Return $child;
 

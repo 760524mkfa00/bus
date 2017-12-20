@@ -9,8 +9,6 @@
                     <option value="{{ $child->id }}" {{ ($child->id === $currentChild->id) ? 'selected' : '' }}>{{ $child->first_name . ' ' . $child->last_name }}</option>
                 @endforeach
             </select>
-
-{{--            {{ $currentChild }}--}}
             <hr />
             <div class="row">
                 <div class="col-4">
@@ -180,6 +178,18 @@
                                    value="{{ $currentChild->updated_at }}" readonly>
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label for="processed" class="form-label col-sm-3">Tags</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" multiple='multiple' name="tag[]" id="tag" size="8">
+                                @foreach($tagList as $id => $tag)
+                                    <option value="{{ $id }}" {{ (in_array($id, $selectedTags)) ? ' selected="selected"' : '' }}>{{ $tag }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -197,13 +207,16 @@
                 </div>
 
                 <div class="col-4">
-                    <div class="form-group">
-                        <label for="processed" class="form-label">Tags</label>
-                        <select class="form-control" multiple='multiple' name="tag[]" id="tag" size="8">
-                            @foreach($tagList as $id => $tag)
-                                <option value="{{ $id }}" {{ (in_array($id, $selectedTags)) ? ' selected="selected"' : '' }}>{{ $tag }}</option>
-                            @endforeach
-                        </select>
+
+
+
+                    <div class="form-group row" style="{{ ($currentChild->amount > 0) ? '' : 'display:none' }};">
+                        <label for="amount" class=" col-sm-3 form-label">Amount</label>
+                        <div class="input-group col-sm-9">
+                            <span class="input-group-addon">$</span>
+                            <input id="amount" type="amount" class="form-control" name="amount"
+                                   value="{{ number_format($currentChild->amount, 2, '.', ',') }}">
+                        </div>
                     </div>
                 </div>
             </div>
