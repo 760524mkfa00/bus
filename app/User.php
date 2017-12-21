@@ -126,7 +126,7 @@ class User extends Authenticatable
         return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
     }
 
-    public function scopePhone( $query, $number )
+    public function scopeTelePhone( $query, $number )
     {
         $query->where('primary_phone', 'like', "%{$number}%")
             ->orWhere('secondary_phone', 'like', "%{$number}%");

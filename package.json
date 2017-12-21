@@ -23,7 +23,8 @@
   "dependencies": {
     "datatables.net-bs4": "^1.10.16",
     "datatables.net-buttons-bs4": "^1.4.2",
-    "datatables.net-buttons-dt": "^1.4.2",
+    "datatables.net-buttons-dt": "^1.5.0",
+    "datatables.net-dt": "^1.10.16",
     "font-awesome": "^4.7.0",
     "jszip": "^3.1.5",
     "pdfmake": "^0.1.34",

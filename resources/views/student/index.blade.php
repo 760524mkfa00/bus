@@ -19,26 +19,13 @@
 
             $(function () {
                 $('#table').DataTable({
-                    dom: 'Bfrtip',
+                    // dom: 'Bfrtip',
                     aoColumnDefs: [{
                         'bSortable': false,
                         'aTargets': ['nosort']
                     }],
                     buttons: [
                         'pageLength',
-                        // {
-                        //     extend: 'pdfHtml5',
-                        //     orientation: 'landscape',
-                        //     pageSize: 'LEGAL',
-                        //     exportOptions: {
-                        //         columns: [ 0, 1, 2, 3 ]
-                        //     },
-                        //     customize : function(doc) {
-                        //         // doc.pageMargins = [10, 10, 10,10 ];
-                        //         doc.content[1].table.widths =
-                        //             Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                        //     }
-                        // },
                         {
                             extend: 'print',
                             orientation: 'landscape',
@@ -56,13 +43,14 @@
                                     .addClass( 'compact table-sm' )
                                     .css( 'font-size', 'inherit' );
                             }
-                        },  'csv'
+                        },
+                        'csv'
                     ],
                     paging: true,
                     pageLength: 30,
                     lengthMenu: [
                         [15, 30, 60, 120, -1],
-                        ['15 Rows', '30 Rows', '60 Rows', '120 Rows', 'Show All']
+                        ['15', '30', '60', '120', 'All']
                     ]
                 });
             });
@@ -71,7 +59,8 @@
                 dateFormat: "yy-mm-dd"
             });
 
+
+
         });
     </script>
-
 @endsection

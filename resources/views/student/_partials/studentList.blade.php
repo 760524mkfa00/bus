@@ -6,8 +6,8 @@
         {{--@endcan--}}
     </div>
     <div class="card-body">
-        <table class="table table-con" id="table">
-            <thead class="thead-grey">
+        <table class="table table-bordered table-sm" id="table">
+            <thead class="">
             <th scope="col">Name</th>
             <th scope="col">Sib</th>
             <th scope="col">School</th>

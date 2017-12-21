@@ -60,8 +60,8 @@ if (token) {
 window.dt = require( 'datatables.net' );
 window.jszip = require('jszip');
 require( 'pdfmake/build/pdfmake.min' );
-require('pdfmake/build/vfs_fonts');
-require( 'datatables.net-bs4' );
-require( 'datatables.net-buttons-bs4' );
+require('pdfmake/build/vfs_fonts' );
+// require( 'datatables.net-dt' )();
+window.buttons = require( 'datatables.net-buttons');
 require( 'datatables.net-buttons/js/buttons.html5' );
 require( 'datatables.net-buttons/js/buttons.print' );
