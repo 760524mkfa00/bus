@@ -82,7 +82,20 @@ class StudentsController extends Controller
 
         $user = $user->with('order', 'order.children', 'order.children.nextSchool', 'order.children.currentSchool', 'order.children.grade', 'order.children.tags', 'notifications', 'order.children.discount')->find($user->id);
 
+
+
         $selected = $child->tags->pluck('id')->toArray();
+
+        foreach ($user->order as $order) {
+            $order->amount = $order->children->map( function($item, $key) {
+                return $item->amount;
+            })->sum();
+            $order->netAmount = $order->children->map( function($item, $key) {
+                return $item->netAmount();
+            })->sum();
+
+        }
+
 
         return view('student.edit')
             ->withUser($user)

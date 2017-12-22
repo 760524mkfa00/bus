@@ -9,9 +9,6 @@
                 <th>School</th>
                 <th>Grade</th>
                 <th>Seat Assigned</th>
-                <th>Paid</th>
-                <th></th>
-                <th></th>
             </thead>
             <tbody>
                 @foreach($user->order as $order)
@@ -23,9 +20,6 @@
                             <td>{{ $child->nextSchool->school }}</td>
                             <td>{{ $child->grade->grade }}</td>
                             <td>{{ $child->seat_assigned }}</td>
-                            <td>{{ $child->paid }}</td>
-                            <td></td>
-                            <td></td>
                         </tr>
                     @endforeach
                 @endforeach

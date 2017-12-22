@@ -32,4 +32,13 @@ class Order extends Model
 //        return $this->children->count();
 //    }
 
+    public function netAmount()
+    {
+
+        return $this->children->map( function ($item, $key) {
+            return $item->amount - (($item->discount_amount / 100) * $item->amount);
+        })->sum();
+
+    }
+
 }

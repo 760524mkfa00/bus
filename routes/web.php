@@ -155,3 +155,11 @@ Route::group(['prefix' => 'tags'], function () {
         ->middleware('can:remove,busRegistration\Tag');
 
 });
+
+Route::group(['prefix' => 'payments'], function () {
+
+    Route::get('/', 'Admin\PaymentController@index')
+        ->name('begin_payment');
+
+});
+

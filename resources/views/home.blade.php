@@ -9,6 +9,8 @@
 
             <div class="col col-lg-9">
                 @include('_partials/students')
+                <br />
+                @include('_partials/orders')
             </div>
         </div>
     </div>

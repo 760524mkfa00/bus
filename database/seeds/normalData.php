@@ -67,7 +67,7 @@ class normalData extends Seeder
             ['school' => 'Rutland Middle'],
             ['school' => 'Rutland Senior Secondary'],
             ['school' => 'Shannon Lake Elementary'],
-            ['school' => 'South  Elementary'],
+            ['school' => 'South Kelowna Elementary'],
             ['school' => 'South Rutland Elementary'],
             ['school' => 'Springvalley Elementary'],
             ['school' => 'Springvalley Middle'],
@@ -83,7 +83,6 @@ class normalData extends Seeder
         ]);
 
         DB::table('tags')->insert([
-            ['tag' => 'Kindergarten'],
             ['tag' => '2nd Pass'],
             ['tag' => 'Accounts'],
             ['tag' => 'Courtesy Wait'],

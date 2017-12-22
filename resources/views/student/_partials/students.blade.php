@@ -5,8 +5,10 @@
         <form action="{{ route('update_student', [$user->id, $currentChild->id]) }}" method="post">
             {{ csrf_field() }}
             <select class="form-control col-md-3" name="child_id" onchange="this.form.submit()">
-                @foreach($user->children as $child)
-                    <option value="{{ $child->id }}" {{ ($child->id === $currentChild->id) ? 'selected' : '' }}>{{ $child->first_name . ' ' . $child->last_name }}</option>
+                @foreach($user->order as $order)
+                    @foreach($order->children as $child)
+                        <option value="{{ $child->id }}" {{ ($child->id === $currentChild->id) ? 'selected' : '' }}>{{ $child->first_name . ' ' . $child->last_name }}</option>
+                    @endforeach
                 @endforeach
             </select>
             <hr />
