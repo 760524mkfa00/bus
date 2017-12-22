@@ -6,7 +6,7 @@
                 <a title="Edit" href="{{ route('edit_student', [$student->order->id, $student->id]) }}"><strong>{!! $student->fullName() !!}</strong></a><br>
                 <span class="small">> {!! $student->order->parent->fullName() !!}</span>
             </td>
-            <td><strong> {!! $student->order->parent->order->countMe() !!}</strong></td>
+            <td><strong>{{ $student->order->parent->siblings }}</strong></td>
             <td>{!! $student->nextSchool->school !!}</td>
             <td>{!! ucfirst($student->seat_assigned) !!}</td>
             <td>{!! ucfirst($student->international) !!}</td>

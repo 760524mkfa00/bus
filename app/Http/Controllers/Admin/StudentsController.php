@@ -53,7 +53,7 @@ class StudentsController extends Controller
         Session::put('searchValues', $filter);
 
 
-        $child = Child::with('order', 'order.parent', 'order.parent.order.children', 'nextSchool', 'grade')
+        $child = Child::with('order', 'order.parent', 'order.parent.order', 'order.parent.order.children', 'nextSchool', 'grade')
             ->whereHas('order.parent', function ( $query ) use ($filter) {
                 if($filter['phone']) $query->telePhone($filter['phone']);
             })->searchSeat($filter['seat'])
@@ -66,7 +66,12 @@ class StudentsController extends Controller
             ->orderBy('first_name')
             ->get();
 
-//        dd($child);
+            foreach($child as $student) {
+                $student->order->parent->siblings = $student->order->parent->order->map( function($item, $key) {
+                    return $item->children->count();
+                })->sum();
+            }
+
         return view('student.index')
             ->withStudents($child);
 
