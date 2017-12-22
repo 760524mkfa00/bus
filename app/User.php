@@ -63,9 +63,9 @@ class User extends Authenticatable
     /**
      * Get the children for the parents.
      */
-    public function children()
+    public function order()
     {
-        return $this->hasMany('busRegistration\Child', 'parent_id');
+        return $this->hasMany('busRegistration\Order', 'parent_id');
     }
 
     /**

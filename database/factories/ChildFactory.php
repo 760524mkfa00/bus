@@ -4,12 +4,12 @@ use Faker\Generator as Faker;
 
 $factory->define(busRegistration\Child::class, function (Faker $faker) {
 
-    $users = \busRegistration\User::all()->pluck('id')->toArray();
+    $orders = \busRegistration\Order::all()->pluck('id')->toArray();
     $school = \busRegistration\School::all()->pluck('id')->toArray();
     $grade = \busRegistration\Grade::all()->pluck('id')->toArray();
 
     return [
-        'parent_id' => $faker->randomElement($users),
+        'order_id' => $faker->randomElement($orders),
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
         'address' => $faker->streetAddress,
@@ -26,6 +26,5 @@ $factory->define(busRegistration\Child::class, function (Faker $faker) {
         'paid' => $faker->randomElement(['yes', 'no']),
         'seat_assigned' => $faker->randomElement(['yes', 'no']),
         'processed' => $faker->randomElement(['yes', 'no']),
-        'year' => '2017'
     ];
 });

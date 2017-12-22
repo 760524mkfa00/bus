@@ -31,6 +31,9 @@ class CreateUsersTable extends Migration
             $table->boolean('accept_rules')->default(0);
             $table->boolean('accept_video')->default(0);
             $table->boolean('accept_email')->default(0);
+            $table->string('moneris_id')->nullable();
+            $table->string('card_last_four')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });

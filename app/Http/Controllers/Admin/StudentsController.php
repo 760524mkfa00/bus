@@ -53,8 +53,8 @@ class StudentsController extends Controller
         Session::put('searchValues', $filter);
 
 
-        $child = Child::with('parent', 'parent.children', 'nextSchool', 'grade')
-            ->whereHas('parent', function ( $query ) use ($filter) {
+        $child = Child::with('order', 'order.parent', 'order.parent.order.children', 'nextSchool', 'grade')
+            ->whereHas('order.parent', function ( $query ) use ($filter) {
                 if($filter['phone']) $query->telePhone($filter['phone']);
             })->searchSeat($filter['seat'])
             ->searchPaid($filter['paid'])
@@ -63,6 +63,7 @@ class StudentsController extends Controller
             ->searchProcessed($filter['processed'])
             ->searchTag($filter['tag'])
             ->searchCreated($filter['created_at'])
+            ->orderBy('first_name')
             ->get();
 
 //        dd($child);
@@ -74,7 +75,7 @@ class StudentsController extends Controller
     public function edit(User $user, Child $child)
     {
 
-        $user = $user->with('children', 'children.nextSchool', 'children.currentSchool', 'children.grade', 'children.tags', 'notifications')->find($user->id);
+        $user = $user->with('order', 'order.children', 'order.children.nextSchool', 'order.children.currentSchool', 'order.children.grade', 'order.children.tags', 'notifications', 'order.children.discount')->find($user->id);
 
         $selected = $child->tags->pluck('id')->toArray();
 
@@ -129,7 +130,9 @@ class StudentsController extends Controller
             "int_end_date" => $data['int_end_date'] ?? NULL,
             "medical_information" => $data['medical_information'],
             "student_note" => $data['student_note'],
-            "amount" => $data['amount'] ?? 0.00
+            "amount" => $data['amount'] ?? 0.00,
+            "discount_amount" => $data['discount_amount'],
+            "discount_id" => $data['discount_id']
         ]);
 
         if (isset($data['tag'])) {

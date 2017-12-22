@@ -3,6 +3,7 @@
 namespace busRegistration\Http\Controllers\Application;
 
 use busRegistration\Child;
+use busRegistration\Order;
 use busRegistration\User;
 use Illuminate\Http\Request;
 use busRegistration\Http\Requests\storeParent;
@@ -21,10 +22,12 @@ class ApplicationController extends Controller
 
         $parent = User::find(Auth()->id());
 
+        $order = $this->checkOrder($parent);
+
         $data = $request->all();
 
         Child::create([
-            "parent_id" => $parent->id,
+            "order_id" => $order->id,
             "first_name" => $data['first_name'],
             "last_name" => $data['last_name'],
             "grade_id" => $data['grade_id'],
@@ -37,9 +40,29 @@ class ApplicationController extends Controller
             "international" => $data['international'],
             "int_start_date" => $data['int_start_date'],
             "int_end_date" => $data['int_end_date'],
-            "year" => config('app.year'),
         ]);
 
         return redirect()->route('home');
+    }
+
+    /**
+     * @param $parent
+     * @return mixed
+     */
+    public function checkOrder($parent)
+    {
+        $orders = Order::where(['parent_id' => $parent->id], ['school_year' => config('app.year')])->get();
+
+        foreach($orders as $order){
+            if ($order->paid_amount === 0.0) return $order;
+        }
+
+        return Order::create([
+            'parent_id' => $parent->id,
+            'order_number' => $order->id . date("dmy-G:i:s"),
+            'school_year' => config('app.year'),
+            'paid_amount' => '0'
+        ]);
+
     }
 }

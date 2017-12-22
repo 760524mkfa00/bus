@@ -207,15 +207,33 @@
                 </div>
 
                 <div class="col-4">
-
-
-
-                    <div class="form-group row" style="{{ ($currentChild->amount > 0) ? '' : 'display:none' }};">
-                        <label for="amount" class=" col-sm-3 form-label">Amount</label>
-                        <div class="input-group col-sm-9">
+                    <div class="form-group row payment-block" style="{{ ($currentChild->amount > 0) ? '' : 'display:none' }};">
+                        <label for="amount" class=" col-sm-12 form-label">Amount</label>
+                        <div class="input-group col-sm-12">
                             <span class="input-group-addon">$</span>
                             <input id="amount" type="amount" class="form-control" name="amount"
                                    value="{{ number_format($currentChild->amount, 2, '.', ',') }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group row payment-block" style="{{ ($currentChild->amount > 0) ? '' : 'display:none' }};">
+                        <label for="discount_amount" class="col-sm-12 form-label">Discount Percentage (0 to 100)</label>
+                        <div class="input-group col-sm-12">
+                            <span class="input-group-addon">%</span>
+                            <input id="discount_amount" type="discount_amount" class="form-control" name="discount_amount"
+                                   value="{{ $currentChild->discount_amount }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group row payment-block" style="{{ ($currentChild->amount > 0) ? '' : 'display:none' }};">
+                        <label for="discount_id" class="form-label col-sm-12">Discount Reason</label>
+                        <div class="input-group col-sm-12">
+                            <select class="form-control" name="discount_id" id="discount_id">
+                                <option value="">Pick Discount Reason</option>
+                                @foreach($discountList as $id => $discount)
+                                    <option value="{{ $id }}" {{ ($currentChild->discount_id === $id) ? 'selected' : '' }}>{{ $discount }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>

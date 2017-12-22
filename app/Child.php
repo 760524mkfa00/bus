@@ -8,9 +8,10 @@ class Child extends Model
 {
 
     protected $fillable = [
-        'parent_id', 'first_name', 'last_name', 'address', 'city', 'province', 'postal_code', 'current_school_id',
+        'order_id', 'first_name', 'last_name', 'address', 'city', 'province', 'postal_code', 'current_school_id',
         'next_school_id', 'grade_id', 'medical_information', 'international', 'int_start_date', 'int_end_date',
-        'paid', 'seat_assigned', 'processed', 'map_system_id', 'year', 'student_note', 'subsidy', 'amount'
+        'paid', 'seat_assigned', 'processed', 'map_system_id', 'year', 'student_note', 'amount', 'discount_id',
+        'discount_amount'
     ];
 
     protected $dates = [
@@ -21,9 +22,9 @@ class Child extends Model
     /**
      * Get the childs parent.
      */
-    public function parent()
+    public function order()
     {
-        return $this->belongsTo('busRegistration\User', 'parent_id');
+        return $this->belongsTo('busRegistration\Order', 'order_id');
     }
 
     /**
@@ -56,6 +57,14 @@ class Child extends Model
     public function tags()
     {
         return $this->belongsToMany('busRegistration\Tag', 'children_tags', 'children_id');
+    }
+
+    /**
+     * Get the child's school from september.
+     */
+    public function discount()
+    {
+        return $this->belongsTo('busRegistration\Discount', 'discount_id');
     }
 
     /**
@@ -100,6 +109,32 @@ class Child extends Model
 
         if ($created) $query->whereDate('created_at', $created);
 
+    }
+
+
+    public function fullName()
+    {
+        return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
+    }
+
+    public function netAmount()
+    {
+        if($this->discount_amount > 0) {
+            $discount = ($this->discount_amount / 100) * $this->amount;
+            return round($this->amount - $discount, 2);
+        }
+
+        return $this->amount;
+    }
+
+    public function totalOutstanding()
+    {
+        return $this->netAmount() - ($this->paid ?? 0);
+    }
+
+    public function countMe()
+    {
+        return $this->count();
     }
 
 }

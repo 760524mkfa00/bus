@@ -81,5 +81,23 @@ class normalData extends Seeder
             ['name' => 'User', 'slug' => 'user', 'permissions' => '{"read-only": true}'],
             ['name' => 'Admin', 'slug' => 'admin', 'permissions' => '{"add-role": true, "view-role": true, "list-grade": true, "create-user": true, "list-school": true, "remove-role": true, "update-user": true, "create-grade": true, "list-student": true, "remove-grade": true, "store-school": true, "create-school": true, "remove-school": true, "store-student": true, "update-school": true, "add-permission": true, "create-student": true, "remove-student": true, "remove-permission": true, "list-tag": true, "create-tag": true, "store-tag": true, "remove-tag": true }']
         ]);
+
+        DB::table('tags')->insert([
+            ['tag' => 'Kindergarten'],
+            ['tag' => '2nd Pass'],
+            ['tag' => 'Accounts'],
+            ['tag' => 'Courtesy Wait'],
+            ['tag' => 'Mapp Issues'],
+            ['tag' => 'Refund'],
+            ['tag' => 'Sped Route'],
+            ['tag' => 'Waiting for a Response']
+        ]);
+
+        DB::table('discounts')->insert([
+            ['discount' => 'School Subsidy'],
+            ['discount' => 'MOE Subsidy'],
+            ['discount' => 'Accounts'],
+            ['discount' => 'Transportation']
+        ]);
     }
 }

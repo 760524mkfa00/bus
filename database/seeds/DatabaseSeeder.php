@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
     {
          $this->call(normalData::class);
         factory(busRegistration\User::class, 500)->create();
-        factory(busRegistration\Child::class, 1000)->create();
-        factory(busRegistration\Notification::class, 5000)->create();
+        factory(busRegistration\Order::class, 1000)->create();
+        factory(busRegistration\Child::class, 2000)->create();
+        factory(busRegistration\Notification::class, 4000)->create();
     }
 }

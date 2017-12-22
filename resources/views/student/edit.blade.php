@@ -27,7 +27,7 @@
                     $('.international-block').fadeIn('slow');
                 else
                     $('.international-block').fadeOut('slow');
-            });
+           });
 
             $('#processed, #seat-assigned').change(function() {
                 var select = this.value;
@@ -40,11 +40,20 @@
                 }
            });
 
+            $('#tag').select2({
+                placeholder: 'Choose a tag'
+            });
+
+
+            $('#seat-assigned').change(function() {
+                var select = this.value;
+                if (select === 'yes')
+                    $('.payment-block').fadeIn('slow');
+            });
+
         });
 
-        $('#tag').select2({
-            placeholder: 'Choose a tag'
-        });
+
 
     </script>
 

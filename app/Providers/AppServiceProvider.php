@@ -2,6 +2,7 @@
 
 namespace busRegistration\Providers;
 
+use busRegistration\Discount;
 use busRegistration\Grade;
 use busRegistration\Role;
 use busRegistration\School;
@@ -44,6 +45,13 @@ class AppServiceProvider extends ServiceProvider
                 return Tag::all();
             });
             $view->with('tagList', array_pluck($tags, 'tag', 'id'));
+        });
+
+        \View::composer('*', function($view) {
+            $discounts = \Cache::rememberForever('discounts', function() {
+                return Discount::all();
+            });
+            $view->with('discountList', array_pluck($discounts, 'discount', 'id'));
         });
 
     }

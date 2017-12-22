@@ -29,8 +29,8 @@ $factory->define(busRegistration\User::class, function (Faker $faker) {
         'province' => 'BC',
         'postal_code' => $faker->postcode,
         'comments' => 'none',
-        'accept_rules'  => 1,
-        'accept_video'  => 1,
-        'accept_email' => 1,
+        'accept_rules'  => '1',
+        'accept_video'  => '1',
+        'accept_email' => '1',
     ];
 });
