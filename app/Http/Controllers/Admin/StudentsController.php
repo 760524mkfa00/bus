@@ -2,6 +2,7 @@
 
 namespace busRegistration\Http\Controllers\Admin;
 
+use busRegistration\Edulog;
 use Session;
 use busRegistration\User;
 use busRegistration\Child;
@@ -14,10 +15,14 @@ use busRegistration\Http\Requests\UpdateStudentRequest;
 class StudentsController extends Controller
 {
 
-    public function __construct()
+    protected $edulog;
+
+    public function __construct(Edulog $edulog)
     {
 
         $this->middleware('auth');
+
+        $this->edulog = $edulog;
 
     }
 
@@ -96,11 +101,13 @@ class StudentsController extends Controller
 
         }
 
+        $edulogUser = ($child->map_system_id) ? $this->edulog->EdulogUser((int) $child->map_system_id) : new Edulog();
 
         return view('student.edit')
             ->withUser($user)
             ->withCurrentChild($child)
-            ->withSelectedTags($selected);
+            ->withSelectedTags($selected)
+            ->withEdulog($edulogUser);
     }
 
     public function update(User $user, Child $child, UpdateStudentRequest $updateStudentRequest)
@@ -150,7 +157,8 @@ class StudentsController extends Controller
             "student_note" => $data['student_note'],
             "amount" => $data['amount'] ?? 0.00,
             "discount_amount" => $data['discount_amount'],
-            "discount_id" => $data['discount_id']
+            "discount_id" => $data['discount_id'],
+            "map_system_id" => $data['map_system_id']
         ]);
 
         if (isset($data['tag'])) {

@@ -240,9 +240,6 @@
                     </div>
                 </div>
             </div>
-
-
-
             <button type="submit" name="updateStudent" value="true" class="btn btn-primary float-right">
                 Update Student
             </button>

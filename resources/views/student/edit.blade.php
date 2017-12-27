@@ -8,9 +8,20 @@
             </div>
 
             <div class="col col-lg-9">
-                @include('student._partials/students')
-                <br />
-                @include('student._partials/studentInvoice')
+                <div class="row">
+                    <div class="col">
+                        @include('student._partials/students')
+                    </div>
+                </div>
+        <br />
+                <div class="row">
+                    <div class="col-7">
+                        @include('student._partials/studentInvoice')
+                    </div>
+                    <div class="col-5">
+                        @include('student._partials/studentTransportation')
+                    </div>
+                </div>
             </div>
         </div>
     </div>
