@@ -12,9 +12,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
          $this->call(normalData::class);
-        factory(busRegistration\User::class, 500)->create();
-        factory(busRegistration\Order::class, 1000)->create();
-        factory(busRegistration\Child::class, 2000)->create();
-        factory(busRegistration\Notification::class, 4000)->create();
+        factory(busRegistration\User::class, 4500)->create();
+        factory(busRegistration\Order::class, 2250)->create();
+        factory(busRegistration\Child::class, 6100)->create();
+        factory(busRegistration\Notification::class, 500)->create();
     }
 }
