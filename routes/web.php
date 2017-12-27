@@ -158,8 +158,11 @@ Route::group(['prefix' => 'tags'], function () {
 
 Route::group(['prefix' => 'payments'], function () {
 
-    Route::get('/', 'Admin\PaymentController@index')
+    Route::get('/{order}', 'Admin\PaymentController@index')
         ->name('begin_payment');
+
+    Route::post('/{order}', 'Admin\PaymentController@preAuthPayment')
+        ->name('pre_auth');
 
 });
 

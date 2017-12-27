@@ -31,6 +31,11 @@ class CreateUsersTable extends Migration
             $table->boolean('accept_rules')->default(0);
             $table->boolean('accept_video')->default(0);
             $table->boolean('accept_email')->default(0);
+            $table->string('card_name', 100)->nullable();
+            $table->string('billing_address', 100)->nullable();
+            $table->string('billing_city', 50)->nullable();
+            $table->string('billing_province', 50)->nullable();
+            $table->string('billing_postal_code', 10)->nullable();
             $table->string('moneris_id')->nullable();
             $table->string('card_last_four')->nullable();
 

@@ -1,7 +1,6 @@
 <div class="card">
     <div class="card-header">Transportation</div>
     <div class="card-body">
-
         @if(is_array($edulog))
             <h6>Dist: {{ $edulog['0']->StudWalkDistance }} - Elg: {{ $edulog['0']->DispEligibility }}</h6>
             <table class="table">
