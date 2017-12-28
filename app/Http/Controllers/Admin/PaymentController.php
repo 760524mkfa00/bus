@@ -2,7 +2,10 @@
 
 namespace busRegistration\Http\Controllers\Admin;
 
+use busRegistration\Http\PaymentGateway\mpgAvsInfo;
+use busRegistration\Http\PaymentGateway\mpgCustInfo;
 use busRegistration\Http\PaymentGateway\mpgHttpsPost;
+use busRegistration\Http\PaymentGateway\mpgHttpsPostStatus;
 use busRegistration\Http\PaymentGateway\mpgRequest;
 use busRegistration\Http\PaymentGateway\mpgResponse;
 use busRegistration\Http\PaymentGateway\mpgTransaction;
@@ -54,36 +57,46 @@ class PaymentController extends Controller
         $details = $request->all();
 
         $details['expdate'] = preg_replace('/[^0-9]/', '', $details['expdate']);
-//        dd($details);
+
 
         $txnArray = [
-            $type = 'preauth',
-            $order_id = $order->id,
-            $cust_id = $order->parent_id,
-            $amount = '10.31',
-            $pan = $details['pan'],
-            $expiry_date = $details['expdate'],
-            $crypt = '7',
+            'type' => 'preauth',
+            'order_id' => (string) 'ord-123456789', //$order->order_number,
+            'cust_id' => (string) $order->parent_id,
+            'amount' => (string) '10.31',
+            'pan' => (string) $details['pan'],
+            'expdate' => (string) '2012',//$details['expdate'],
+            'crypt' => '7',
+//            'dynamic_descriptor' => 'payment',
         ];
 
+        $avsTemplate = array(
+            'avs_street_number' => '201',
+            'avs_street_name' => 'downing street',
+            'avs_zipcode' => 'v1x5k9'
+        );
+
+//        $mpgAvsInfo = new mpgAvsInfo ();
+//        $mpgAvsInfo->mpgAvsInfo($avsTemplate);
 
 
-        $mpgTxn = new mpgTransaction($txnArray);
+        $mpgTxn = new mpgTransaction();
+//        $mpgTxn->setAvsInfo($mpgAvsInfo);
         $mpgTxn->mpgTransaction($txnArray);
-
 
         $mpgRequest = new mpgRequest();
         $mpgRequest->mpgRequest($mpgTxn);
+
         $mpgRequest->setProcCountryCode("CA"); //"CA" for sending transaction to Canadian environment
         $mpgRequest->setTestMode(true);
 
-
-        $mpgHttpPost = new mpgHttpsPost();
-        $mpgHttpPost->mpgHttpsPost($this->store_id, $this->api_token, $mpgRequest);
+        $mpgHttpPost = new mpgHttpsPostStatus();
+        $mpgHttpPost->mpgHttpsPostStatus($this->store_id, $this->api_token, false, $mpgRequest);
 
         $mpgResponse = $mpgHttpPost->getMpgResponse();
 
-        dd($mpgResponse);
+//        dd($mpgResponse);
+
 
 
         print ("\nCardType = " . $mpgResponse->getCardType());
