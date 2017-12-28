@@ -48,7 +48,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('slug')->unique();
-            $table->text('permissions'); // jsonb deletes duplicates
+            $table->text('permissions'); // jsonb deletes duplicates should be jsonb datatype
             $table->timestamps();
         });
 

@@ -48,6 +48,7 @@ class CreateParentChildTables extends Migration
         });
 
         Schema::create('discounts', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('discount', 50);
             $table->timestamps();
