@@ -59,7 +59,7 @@ class ApplicationController extends Controller
 
         return Order::create([
             'parent_id' => $parent->id,
-            'order_number' => $order->id . date("dmy-G:i:s"),
+            'order_number' => $parent->id . date("dmy-G:i:s"),
             'school_year' => config('app.year'),
             'paid_amount' => '0'
         ]);

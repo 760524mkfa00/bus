@@ -50,33 +50,41 @@ class PaymentController extends Controller
     public function preAuthPayment(Request $request, Order $order)
     {
 
+
         $details = $request->all();
 
         $details['expdate'] = preg_replace('/[^0-9]/', '', $details['expdate']);
 //        dd($details);
 
         $txnArray = [
-            $type='preauth',
-            $order_id= $order->id,
-            $cust_id= $order->parent_id,
-            $amount='10.31',
-            $pan= $details['pan'],
-            $expiry_date='1206',
-            $crypt='7',
+            $type = 'preauth',
+            $order_id = $order->id,
+            $cust_id = $order->parent_id,
+            $amount = '10.31',
+            $pan = $details['pan'],
+            $expiry_date = $details['expdate'],
+            $crypt = '7',
         ];
 
-        $mpgTxn = new mpgTransaction($txnArray);
 
-        $mpgRequest = new mpgRequest($mpgTxn);
+
+        $mpgTxn = new mpgTransaction($txnArray);
+        $mpgTxn->mpgTransaction($txnArray);
+
+
+        $mpgRequest = new mpgRequest();
+        $mpgRequest->mpgRequest($mpgTxn);
         $mpgRequest->setProcCountryCode("CA"); //"CA" for sending transaction to Canadian environment
         $mpgRequest->setTestMode(true);
 
-        $mpgHttpPost = new mpgHttpsPost($this->store_id, $this->api_token, $mpgRequest);
 
+        $mpgHttpPost = new mpgHttpsPost();
+        $mpgHttpPost->mpgHttpsPost($this->store_id, $this->api_token, $mpgRequest);
 
         $mpgResponse = $mpgHttpPost->getMpgResponse();
 
-        dd($mpgHttpPost);
+        dd($mpgResponse);
+
 
         print ("\nCardType = " . $mpgResponse->getCardType());
         print("\nTransAmount = " . $mpgResponse->getTransAmount());
