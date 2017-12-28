@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
+        Schema::defaultStringLength(191);
+
         \View::composer('*', function($view) {
             $roles = \Cache::rememberForever('roles', function() {
                 return Role::all();
