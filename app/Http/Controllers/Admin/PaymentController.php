@@ -63,11 +63,10 @@ class PaymentController extends Controller
             'type' => 'preauth',
             'order_id' => (string) 'ord-123456789', //$order->order_number,
             'cust_id' => (string) $order->parent_id,
-            'amount' => (string) '10.31',
+            'amount' => (string) '55.31',
             'pan' => (string) $details['pan'],
             'expdate' => (string) '2012',//$details['expdate'],
-            'crypt' => '7',
-//            'dynamic_descriptor' => 'payment',
+            'crypt' => '7'
         ];
 
         $avsTemplate = array(
@@ -88,7 +87,7 @@ class PaymentController extends Controller
         $mpgRequest->mpgRequest($mpgTxn);
 
         $mpgRequest->setProcCountryCode("CA"); //"CA" for sending transaction to Canadian environment
-        $mpgRequest->setTestMode(true);
+        $mpgRequest->setTestMode(false);
 
         $mpgHttpPost = new mpgHttpsPostStatus();
         $mpgHttpPost->mpgHttpsPostStatus($this->store_id, $this->api_token, false, $mpgRequest);
