@@ -87,7 +87,7 @@ class PaymentController extends Controller
         $mpgRequest->mpgRequest($mpgTxn);
 
         $mpgRequest->setProcCountryCode("CA"); //"CA" for sending transaction to Canadian environment
-        $mpgRequest->setTestMode(false);
+        $mpgRequest->setTestMode(true);
 
         $mpgHttpPost = new mpgHttpsPost();
         $mpgHttpPost->mpgHttpsPost('store5', 'yesguy',  $mpgRequest);
