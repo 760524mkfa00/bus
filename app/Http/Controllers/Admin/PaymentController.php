@@ -3,6 +3,7 @@
 namespace busRegistration\Http\Controllers\Admin;
 
 
+use busRegistration\Http\PaymentGateway\mpgAvsInfo;
 use busRegistration\Http\PaymentGateway\mpgHttpsPost;
 use busRegistration\Http\PaymentGateway\mpgRequest;
 use busRegistration\Http\PaymentGateway\mpgTransaction;
@@ -44,32 +45,33 @@ class PaymentController extends Controller
     {
 
 
-//        $details = $request->all();
-//
-//        $details['expdate'] = preg_replace('/[^0-9]/', '', $details['expdate']);
+        $details = $request->all();
 
-        /**************************** Request Variables *******************************/
+        $details['expdate'] = preg_replace('/[^0-9]/', '', $details['expdate']);
 
-        $store_id='store5';
-        $api_token='yesguy';
 
         /************************* Transactional Variables ****************************/
 
-        $type='purchase';
-        $cust_id='cust id';
-        $order_id='ord-'.date("dmy-G:i:s");
+        $type='preauth';
+        $cust_id= $order->parent_id;
+        $order_id= $order->order_number;
         $amount='1.00';
-        $pan='4242424242424242';
-        $expiry_date='2011';
+        $pan=$details['pan'];
+        $expiry_date=$details['expdate'];
         $crypt='7';
-        $dynamic_descriptor='123';
+//        $dynamic_descriptor='123';
         $status_check = 'false';
 
-//Optional - Set for Multi-Currency only
-//$amount must be 0.00 when using multi-currency
-        $mcp_amount = '500'; //penny value amount 1.25 = 125
-        $mcp_currency_code = '840'; //ISO-4217 country currency number
+        /******************* Customer Information Variables ********************/
 
+        $first_name = 'Cedric';
+        $last_name = 'Benson';
+        $address = $details['billing_address'];
+        $city = $details['billing_city'];
+        $province = $details['billing_province'];
+        $postal_code = $details['billing_postal_code'];
+        $country = 'Canada';
+        $email =$details['email'];
         /*********************** Transactional Associative Array **********************/
 
         $txnArray=array('type'=>$type,
@@ -78,18 +80,30 @@ class PaymentController extends Controller
             'amount'=>$amount,
             'pan'=>$pan,
             'expdate'=>$expiry_date,
-            'crypt_type'=>$crypt,
-            'dynamic_descriptor'=>$dynamic_descriptor
-            //,'wallet_indicator' => '' //Refer to documentation for details
-            //,'mcp_amount' => $mcp_amount,
-            //'mcp_currency_code' => $mcp_currency_code
+            'crypt_type'=>$crypt
         );
+
+        /********************** AVS Associative Array *************************/
+
+        $avsTemplate = array(
+            'avs_street_number'=>'201',
+            'avs_street_name' =>'home street',
+            'avs_zipcode' => $postal_code,
+            'avs_email' => $email,
+        );
+
+
+        /************************** AVS Object ********************************/
+
+        $mpgAvsInfo = new mpgAvsInfo ();
+        $mpgAvsInfo->mpgAvsInfo($avsTemplate);
+
 
         /**************************** Transaction Object *****************************/
 
         $mpgTxn = new mpgTransaction();
         $mpgTxn->mpgTransaction($txnArray);
-
+        $mpgTxn->setAvsInfo($mpgAvsInfo);
         /****************************** Request Object *******************************/
 
         $mpgRequest = new mpgRequest();
@@ -104,11 +118,11 @@ class PaymentController extends Controller
         */
 
         $mpgHttpPost  =new mpgHttpsPost();
-        $mpgHttpPost->mpgHttpsPost($store_id,$api_token,$mpgRequest);
+        $mpgHttpPost->mpgHttpsPost($this->store_id,$this->api_token,$mpgRequest);
 
         /******************************* Response ************************************/
         $mpgResponse=$mpgHttpPost->getMpgResponse();
-        
+
 
         print("\nCardType = " . $mpgResponse->getCardType());
         print("\nTransAmount = " . $mpgResponse->getTransAmount());
