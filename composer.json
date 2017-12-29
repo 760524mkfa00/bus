@@ -6,7 +6,6 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
-        "cyphp/empg": "^0.0.2",
         "fideloper/proxy": "~3.3",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0"
@@ -25,7 +24,11 @@
         ],
         "psr-4": {
             "busRegistration\\": "app/"
-        }
+        },
+        "files": [
+            "app/Http/PaymentGateway/mpgClasses.php"
+         ]
+
     },
     "autoload-dev": {
         "psr-4": {
