@@ -109,7 +109,7 @@ class PaymentController extends Controller
         /******************************* Response ************************************/
         $mpgResponse=$mpgHttpPost->getMpgResponse();
 
-
+        return $mpgResponse;
 
 
 //        print("\nCardType = " . $mpgResponse->getCardType());

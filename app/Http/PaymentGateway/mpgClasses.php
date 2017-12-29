@@ -73,7 +73,7 @@ class httpsPost
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 		//curl_setopt($ch, CURLOPT_CAINFO, "PATH_TO_CA_BUNDLE");
 		$this->response=curl_exec($ch);
-		
+
 		curl_close($ch);
 
 		if($this->debug == true)
