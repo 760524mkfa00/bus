@@ -76,10 +76,10 @@ class httpsPost
 
 		curl_close($ch);
 
-		if($this->debug == true)
-		{
-			echo "\n\nRESPONSE= $this->response\n";
-		}
+//		if($this->debug == true)
+//		{
+//			echo "\n\nRESPONSE= $this->response\n";
+//		}
 	}
 	
 	function getHttpsResponse()
