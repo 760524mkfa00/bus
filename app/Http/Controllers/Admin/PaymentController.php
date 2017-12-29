@@ -2,16 +2,14 @@
 
 namespace busRegistration\Http\Controllers\Admin;
 
-use busRegistration\Http\PaymentGateway\mpgAvsInfo;
-use busRegistration\Http\PaymentGateway\mpgCustInfo;
-use busRegistration\Http\PaymentGateway\mpgHttpsPost;
-use busRegistration\Http\PaymentGateway\mpgHttpsPostStatus;
-use busRegistration\Http\PaymentGateway\mpgRequest;
-use busRegistration\Http\PaymentGateway\mpgResponse;
-use busRegistration\Http\PaymentGateway\mpgTransaction;
 
 use busRegistration\User;
 use busRegistration\Order;
+use Empg\Client;
+use Empg\Configuration;
+use Empg\HttpsPost\MpgHttpsPost;
+use Empg\HttpsPost\Request\MpgRequest;
+use Empg\HttpsPost\Transaction\MpgTransaction;
 use Illuminate\Http\Request;
 use busRegistration\Http\Controllers\Controller;
 
@@ -22,9 +20,8 @@ class PaymentController extends Controller
 
     protected $api_token;
 
-    protected $mpgResponse;
 
-    public function __construct(mpgResponse $mpgResponse)
+    public function __construct()
     {
 
         $this->middleware('auth');
@@ -32,11 +29,6 @@ class PaymentController extends Controller
         $this->store_id = env('MONERIS_ID');
 
         $this->api_token = env('MONERIS_KEY');
-
-        $this->mpgResponse = $mpgResponse;
-
-
-
     }
 
     public function index(Order $order)
@@ -58,63 +50,29 @@ class PaymentController extends Controller
 
         $details['expdate'] = preg_replace('/[^0-9]/', '', $details['expdate']);
 
+        $transaction = new MpgTransaction([
+            'type' => 'res_mpitxn',
+            'expdate' => '1807',
+            'data_key' => 'FAFGAFGHFAGHSFHGA',
+            'xid' => '99999999991902175641',
+            'MD' => '224530',
+            'merchantUrl' => 'www.test.com',
+            'accept' => true,
+            'userAgent' => 'Mozilla',
+        ]);
+        $requesting = new MpgRequest($transaction);
 
-        $txnArray = [
-            'type' => 'preauth',
-            'order_id' => (string) 'ord-123456789', //$order->order_number,
-            'cust_id' => (string) $order->parent_id,
-            'amount' => (string) '9.00',
-            'pan' => (string) $details['pan'],
-            'expdate' => (string) '2012',//$details['expdate'],
-            'crypt' => '7'
-        ];
+        $requesting->setProcCountryCode('CA');
+        $requesting->setTestMode(true);
 
-        $avsTemplate = array(
-            'avs_street_number' => '201',
-            'avs_street_name' => 'downing street',
-            'avs_zipcode' => 'v1x5k9'
-        );
+//        $client = new Client($this->store_id, $this->api_token);
+        $config = new Configuration('store1', 'yesguy', [
+            'env' => Configuration::ENV_TEST, 'debug' => true
+        ]);
+        $httpPost = new MpgHttpsPost($config, $requesting);
+        $httpPost->execute();
+        return $httpPost->getMpgResponse();
 
-//        $mpgAvsInfo = new mpgAvsInfo ();
-//        $mpgAvsInfo->mpgAvsInfo($avsTemplate);
-
-
-        $mpgTxn = new mpgTransaction();
-//        $mpgTxn->setAvsInfo($mpgAvsInfo);
-        $mpgTxn->mpgTransaction($txnArray);
-
-        $mpgRequest = new mpgRequest();
-        $mpgRequest->mpgRequest($mpgTxn);
-
-        $mpgRequest->setProcCountryCode("CA"); //"CA" for sending transaction to Canadian environment
-        $mpgRequest->setTestMode(true);
-
-        $mpgHttpPost = new mpgHttpsPost();
-        $mpgHttpPost->mpgHttpsPost('store5', 'yesguy',  $mpgRequest);
-
-        $mpgResponse = $mpgHttpPost->getMpgResponse();
-
-        dd($mpgHttpPost);
-
-
-
-        print ("\nCardType = " . $mpgResponse->getCardType());
-        print("\nTransAmount = " . $mpgResponse->getTransAmount());
-        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
-        print("\nReceiptId = " . $mpgResponse->getReceiptId());
-        print("\nTransType = " . $mpgResponse->getTransType());
-        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
-        print("\nResponseCode = " . $mpgResponse->getResponseCode());
-        print("\nMessage = " . $mpgResponse->getMessage());
-        print("\nAuthCode = " . $mpgResponse->getAuthCode());
-        print("\nComplete = " . $mpgResponse->getComplete());
-        print("\nTransDate = " . $mpgResponse->getTransDate());
-        print("\nTransTime = " . $mpgResponse->getTransTime());
-        print("\nTicket = " . $mpgResponse->getTicket());
-        print("\nTimedOut = " . $mpgResponse->getTimedOut());
-        print("\nAVSResponse = " . $mpgResponse->getAvsResultCode());
-        print("\nCVDResponse = " . $mpgResponse->getCvdResultCode());
-        print("\nCardLevelResult = " . $mpgResponse->getCardLevelResult());
 
 
     }
