@@ -63,7 +63,7 @@ class PaymentController extends Controller
             'type' => 'preauth',
             'order_id' => (string) 'ord-123456789', //$order->order_number,
             'cust_id' => (string) $order->parent_id,
-            'amount' => (string) '55.31',
+            'amount' => (string) '9.00',
             'pan' => (string) $details['pan'],
             'expdate' => (string) '2012',//$details['expdate'],
             'crypt' => '7'
@@ -89,12 +89,12 @@ class PaymentController extends Controller
         $mpgRequest->setProcCountryCode("CA"); //"CA" for sending transaction to Canadian environment
         $mpgRequest->setTestMode(false);
 
-        $mpgHttpPost = new mpgHttpsPostStatus();
-        $mpgHttpPost->mpgHttpsPostStatus($this->store_id, $this->api_token, false, $mpgRequest);
+        $mpgHttpPost = new mpgHttpsPost();
+        $mpgHttpPost->mpgHttpsPost('store5', 'yesguy',  $mpgRequest);
 
         $mpgResponse = $mpgHttpPost->getMpgResponse();
 
-//        dd($mpgResponse);
+        dd($mpgHttpPost);
 
 
 
