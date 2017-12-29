@@ -107,10 +107,8 @@ class PaymentController extends Controller
         $mpgHttpPost->mpgHttpsPost($store_id,$api_token,$mpgRequest);
 
         /******************************* Response ************************************/
-        dd($mpgHttpPost);
         $mpgResponse=$mpgHttpPost->getMpgResponse();
 
-        dd($mpgResponse);
 
 
 
