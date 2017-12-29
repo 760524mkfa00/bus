@@ -119,8 +119,6 @@ class mpgHttpsPost
   		$httpsPost->httpsPost($url, $dataToSend);
   		$response = $httpsPost->getHttpsResponse();
 
-  		dd($response);
-  		
   		if(!$response)
   		{
 
@@ -136,7 +134,8 @@ class mpgHttpsPost
           			"</receipt></response>";
    		}
 
-  		$this->mpgResponse=new mpgResponse($response);
+  		$this->mpgResponse=new mpgResponse();
+  		$this->mpgResponse->mpgResponse($response);
 
  	}
 
@@ -222,7 +221,8 @@ class mpgHttpsPostStatus
  		
   		$url = $this->mpgRequest->getURL();
 
-  		$httpsPost= new httpsPost($url, $dataToSend);	
+  		$httpsPost= new httpsPost();
+  		$httpsPost->httpsPost($url, $dataToSend);
   		$response = $httpsPost->getHttpsResponse();
 
   		if(!$response)
@@ -240,7 +240,8 @@ class mpgHttpsPostStatus
           			"</receipt></response>";
    		}
 
-  		$this->mpgResponse=new mpgResponse($response);
+  		$this->mpgResponse=new mpgResponse();
+        $this->mpgResponse->mpgResponse($response);
 
  	}
 
@@ -2571,7 +2572,8 @@ class MpiHttpsPost
 
 		$url = $this->mpiRequest->getURL();
 
-  		$httpsPost= new httpsPost($url, $dataToSend);	
+  		$httpsPost= new httpsPost();
+  		$httpsPost->httpsPost($url, $dataToSend);
   		$response = $httpsPost->getHttpsResponse();
 
 		if(!$response)
@@ -2591,7 +2593,8 @@ class MpiHttpsPost
 					"</MpiResponse>";
 		}
 
-		$this->mpiResponse=new MpiResponse($response);
+		$this->mpiResponse=new MpiResponse();
+		$this->mpiResponse->MpiResponse($response);
 			
 	}
 
@@ -2958,7 +2961,8 @@ class riskHttpsPost{
 	
 		$url = $this->riskRequest->getURL();
 
-  		$httpsPost= new httpsPost($url, $dataToSend);	
+  		$httpsPost= new httpsPost();
+  		$httpsPost->httpsPost($url, $dataToSend);
   		$response = $httpsPost->getHttpsResponse();
 
 		if(!$response)
@@ -2976,7 +2980,8 @@ class riskHttpsPost{
 		}
 
 		//print "Got a xml response of: \n$response\n";
-		$this->riskResponse=new riskResponse($response);
+		$this->riskResponse=new riskResponse();
+		$this->riskResponse->riskResponse($response);
 
 	}
 
