@@ -109,29 +109,29 @@ class PaymentController extends Controller
         /******************************* Response ************************************/
         $mpgResponse=$mpgHttpPost->getMpgResponse();
 
-        return $mpgResponse;
+//        return $mpgResponse;
 
 
-//        print("\nCardType = " . $mpgResponse->getCardType());
-//        print("\nTransAmount = " . $mpgResponse->getTransAmount());
-//        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
-//        print("\nReceiptId = " . $mpgResponse->getReceiptId());
-//        print("\nTransType = " . $mpgResponse->getTransType());
-//        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
-//        print("\nResponseCode = " . $mpgResponse->getResponseCode());
-//        print("\nISO = " . $mpgResponse->getISO());
-//        print("\nMessage = " . $mpgResponse->getMessage());
-//        print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
-//        print("\nAuthCode = " . $mpgResponse->getAuthCode());
-//        print("\nComplete = " . $mpgResponse->getComplete());
-//        print("\nTransDate = " . $mpgResponse->getTransDate());
-//        print("\nTransTime = " . $mpgResponse->getTransTime());
-//        print("\nTicket = " . $mpgResponse->getTicket());
-//        print("\nTimedOut = " . $mpgResponse->getTimedOut());
-//        print("\nStatusCode = " . $mpgResponse->getStatusCode());
-//        print("\nStatusMessage = " . $mpgResponse->getStatusMessage());
-//        print("\nMCPAmount = " . $mpgResponse->getMCPAmount());
-//        print("\nMCPCurrenyCode = " . $mpgResponse->getMCPCurrencyCode());
+        print("\nCardType = " . $mpgResponse->getCardType());
+        print("\nTransAmount = " . $mpgResponse->getTransAmount());
+        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
+        print("\nReceiptId = " . $mpgResponse->getReceiptId());
+        print("\nTransType = " . $mpgResponse->getTransType());
+        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
+        print("\nResponseCode = " . $mpgResponse->getResponseCode());
+        print("\nISO = " . $mpgResponse->getISO());
+        print("\nMessage = " . $mpgResponse->getMessage());
+        print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
+        print("\nAuthCode = " . $mpgResponse->getAuthCode());
+        print("\nComplete = " . $mpgResponse->getComplete());
+        print("\nTransDate = " . $mpgResponse->getTransDate());
+        print("\nTransTime = " . $mpgResponse->getTransTime());
+        print("\nTicket = " . $mpgResponse->getTicket());
+        print("\nTimedOut = " . $mpgResponse->getTimedOut());
+        print("\nStatusCode = " . $mpgResponse->getStatusCode());
+        print("\nStatusMessage = " . $mpgResponse->getStatusMessage());
+        print("\nMCPAmount = " . $mpgResponse->getMCPAmount());
+        print("\nMCPCurrenyCode = " . $mpgResponse->getMCPCurrencyCode());
 
 
     }
