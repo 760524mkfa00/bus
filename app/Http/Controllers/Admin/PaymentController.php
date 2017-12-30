@@ -6,10 +6,12 @@ namespace busRegistration\Http\Controllers\Admin;
 use busRegistration\Http\PaymentGateway\mpgAvsInfo;
 use busRegistration\Http\PaymentGateway\mpgCvdInfo;
 use busRegistration\Http\PaymentGateway\mpgHttpsPost;
+use busRegistration\Http\PaymentGateway\mpgRecur;
 use busRegistration\Http\PaymentGateway\mpgRequest;
 use busRegistration\Http\PaymentGateway\mpgTransaction;
 use busRegistration\User;
 use busRegistration\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use busRegistration\Http\Controllers\Controller;
 
@@ -34,17 +36,40 @@ class PaymentController extends Controller
     public function index(Order $order)
     {
 
+        if( $order->parent_id != Auth()->id() ) {
+            return back()->withErrors('You do not have access to this page');
+        }
+
         $parent = User::where('id', $order->parent_id)->first();
         $ordering = $order->where('id', $order->id)->with('children')->first();
 
+        $end = Carbon::parse('2018-06-01');
+        $now = Carbon::now();
+        $length = $end->diffInMonths($now);
+
+
+        $paymentOptions['full'] = $ordering->netAmount();
+        $paymentOptions['split'] = $paymentOptions['full'] / 2;
+        $paymentOptions['multiple'] = $paymentOptions['full'] / $length;
+        $paymentOptions['now'] = $now->format('M/D/YY');
+        $paymentOptions['plusMonth'] = $now->addDays(30)->format('M d, Y');
+        $paymentOptions['multipleMonths'] = $length;
+
+
         return view('payments.details')
             ->withParent($parent)
-            ->withOrder($ordering);
+            ->withOrder($ordering)
+            ->withOptions($paymentOptions);
     }
 
-    public function preAuthPayment(Request $request, Order $order)
+    public function submitPayment(Request $request, Order $order)
     {
-        // TODO: Make sure the parent owns this order when making payment
+
+        dd($request->all());
+
+        if( $order->parent_id != Auth()->id() ) {
+            return back()->withErrors('You do not have access to this page');
+        }
 
         $details = $request->all();
 
@@ -158,6 +183,101 @@ class PaymentController extends Controller
         print("\nMCPAmount = " . $mpgResponse->getMCPAmount());
         print("\nMCPCurrenyCode = " . $mpgResponse->getMCPCurrencyCode());
 
+    }
+
+
+
+    /*
+     * Recurring payments
+     *
+     *
+     */
+
+    public function recurringPayment()
+    {
+        /********************************* Recur Variables ****************************/
+        $recurUnit = 'eom';
+        $startDate = '2018/11/30';
+        $numRecurs = '4';
+        $recurInterval = '10';
+        $recurAmount = '31.00';
+        $startNow = 'true';
+
+        /************************* Transactional Variables ****************************/
+
+        $orderId = 'ord-'.date("dmy-G:i:s");
+        $custId = 'student_number';
+        $creditCard = '5454545454545454';
+        $nowAmount = '10.00';
+        $expiryDate = '0912';
+        $cryptType = '7';
+
+        /*********************** Recur Associative Array **********************/
+
+        $recurArray = array('recur_unit'=>$recurUnit, // (day | week | month)
+            'start_date'=>$startDate, //yyyy/mm/dd
+            'num_recurs'=>$numRecurs,
+            'start_now'=>$startNow,
+            'period' => $recurInterval,
+            'recur_amount'=> $recurAmount
+        );
+
+        $mpgRecur = new mpgRecur();
+        $mpgRecur->mpgRecur($recurArray);
+
+        /*********************** Transactional Associative Array **********************/
+
+        $txnArray=array('type'=>'purchase',
+            'order_id'=>$orderId,
+            'cust_id'=>$custId,
+            'amount'=>$nowAmount,
+            'pan'=>$creditCard,
+            'expdate'=>$expiryDate,
+            'crypt_type'=>$cryptType
+        );
+
+        /**************************** Transaction Object *****************************/
+
+        $mpgTxn = new mpgTransaction();
+        $mpgTxn->mpgTransaction($txnArray);
+
+        /****************************** Recur Object *********************************/
+
+        $mpgTxn->setRecur($mpgRecur);
+
+        /****************************** Request Object *******************************/
+
+        $mpgRequest = new mpgRequest();
+        $mpgRequest->mpgRequest($mpgTxn);
+        $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
+        $mpgRequest->setTestMode(true); //false or comment out this line for production transactions
+
+        /***************************** HTTPS Post Object *****************************/
+
+        $mpgHttpPost = new mpgHttpsPost();
+        $mpgHttpPost->mpgHttpsPost('store5','yesguy', $mpgRequest);
+
+        /******************************* Response ************************************/
+
+        $mpgResponse=$mpgHttpPost->getMpgResponse();
+
+        print ("\nCardType = " . $mpgResponse->getCardType());
+        print("\nTransAmount = " . $mpgResponse->getTransAmount());
+        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
+        print("\nReceiptId = " . $mpgResponse->getReceiptId());
+        print("\nTransType = " . $mpgResponse->getTransType());
+        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
+        print("\nResponseCode = " . $mpgResponse->getResponseCode());
+        print("\nISO = " . $mpgResponse->getISO());
+        print("\nMessage = " . $mpgResponse->getMessage());
+        print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
+        print("\nAuthCode = " . $mpgResponse->getAuthCode());
+        print("\nComplete = " . $mpgResponse->getComplete());
+        print("\nTransDate = " . $mpgResponse->getTransDate());
+        print("\nTransTime = " . $mpgResponse->getTransTime());
+        print("\nTicket = " . $mpgResponse->getTicket());
+        print("\nTimedOut = " . $mpgResponse->getTimedOut());
+        print("\nRecurSuccess = " . $mpgResponse->getRecurSuccess());
     }
 
 }

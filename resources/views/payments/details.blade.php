@@ -10,7 +10,7 @@
                     </div>
                     <div class="card-body">
 
-                        <form class="form-horizontal" role="form" method="POST" action="{{ route('pre_auth', $order->id) }}">
+                        <form class="form-horizontal" role="form" method="POST" action="{{ route('submit_payment', $order->id) }}">
                             {{ csrf_field() }}
                                 <div class="row">
                                     <div class="col">
@@ -107,8 +107,32 @@
 
                                     <div class="col">
                                         <h2>Your Payment Details</h2>
+                                        <div class="col">
+                                            <div class="col">
+                                                <br />
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="paymentOption" id="full" value="full" checked>
+                                                    <label class="form-check-label" for="full">
+                                                        Make full payment of {{ $options['full'] }}
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="paymentOption" id="split" value="split">
+                                                    <label class="form-check-label" for="split">
+                                                        Two payments of {{ $options['split'] }} (Today then {{ $options['plusMonth'] }})
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="paymentOption" id="multiple" value="multiple">
+                                                    <label class="form-check-label" for="multiple">
+                                                        {{ $options['multipleMonths'] }} Monthly payments of {{ $options['multiple'] }}
+                                                    </label>
+                                                </div>
+                                                <br />
+                                            </div>
 
-                                        Payment Options (Full / Two payment 30 days apart / 10 Equal Payments)
+                                        </div>
+
 
                                         <div class="form-group{{ $errors->has('pan') ? ' has-error' : '' }}">
                                             <label for="pan">CARD NUMBER</label>

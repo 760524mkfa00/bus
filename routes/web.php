@@ -161,8 +161,8 @@ Route::group(['prefix' => 'payments'], function () {
     Route::get('/{order}', 'Admin\PaymentController@index')
         ->name('begin_payment');
 
-    Route::post('/{order}', 'Admin\PaymentController@preAuthPayment')
-        ->name('pre_auth');
+    Route::post('/{order}', 'Admin\PaymentController@submitPayment')
+        ->name('submit_payment');
 
 });
 
