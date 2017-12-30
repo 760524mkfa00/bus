@@ -131,7 +131,8 @@ class PaymentController extends Controller
         */
 
         $mpgHttpPost  =new mpgHttpsPost();
-        $mpgHttpPost->mpgHttpsPost($this->store_id,$this->api_token,$mpgRequest);
+        $mpgHttpPost->mpgHttpsPost('store5','yesguy',$mpgRequest);
+//        $mpgHttpPost->mpgHttpsPost($this->store_id,$this->api_token,$mpgRequest);
 
         /******************************* Response ************************************/
         $mpgResponse=$mpgHttpPost->getMpgResponse();
