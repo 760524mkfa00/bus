@@ -44,7 +44,7 @@ class PaymentController extends Controller
 
     public function preAuthPayment(Request $request, Order $order)
     {
-
+        // TODO: Make sure the parent owns this order when making payment
 
         $details = $request->all();
 
@@ -55,7 +55,7 @@ class PaymentController extends Controller
 
         $type='preauth';
         $cust_id= $order->parent_id;
-        $order_id= $order->order_number;
+        $order_id= 'SD23-' . $order->order_number;
         $amount='10.30';
         $pan=$details['pan'];
         $expiry_date=$details['expdate'];
