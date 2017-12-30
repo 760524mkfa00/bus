@@ -4,6 +4,7 @@ namespace busRegistration\Http\Controllers\Admin;
 
 
 use busRegistration\Http\PaymentGateway\mpgAvsInfo;
+use busRegistration\Http\PaymentGateway\mpgCvdInfo;
 use busRegistration\Http\PaymentGateway\mpgHttpsPost;
 use busRegistration\Http\PaymentGateway\mpgRequest;
 use busRegistration\Http\PaymentGateway\mpgTransaction;
@@ -55,7 +56,7 @@ class PaymentController extends Controller
         $type='preauth';
         $cust_id= $order->parent_id;
         $order_id= $order->order_number;
-        $amount='1.00';
+        $amount='10.30';
         $pan=$details['pan'];
         $expiry_date=$details['expdate'];
         $crypt='7';
@@ -64,13 +65,11 @@ class PaymentController extends Controller
 
         /******************* Customer Information Variables ********************/
 
-        $first_name = 'Cedric';
-        $last_name = 'Benson';
-        $address = $details['billing_address'];
-        $city = $details['billing_city'];
-        $province = $details['billing_province'];
+        $first_name = $details['billing_first_name'];
+        $last_name = $details['billing_last_name'];
+        $number = $details['billing_address_number'];
+        $street = $details['billing_address_street'];
         $postal_code = $details['billing_postal_code'];
-        $country = 'Canada';
         $email =$details['email'];
         /*********************** Transactional Associative Array **********************/
 
@@ -86,10 +85,18 @@ class PaymentController extends Controller
         /********************** AVS Associative Array *************************/
 
         $avsTemplate = array(
-            'avs_street_number'=>'201',
-            'avs_street_name' =>'home street',
-            'avs_zipcode' => $postal_code,
-            'avs_email' => $email,
+
+            'avs_street_number'=> $number,
+            'avs_street_name' => $street,
+            'avs_zipcode' => $postal_code
+//            'avs_email' => $email,
+        );
+
+        /********************** CVD Associative Array *************************/
+
+        $cvdTemplate = array(
+            'cvd_indicator' => '1',
+            'cvd_value' => $details['cvc']
         );
 
 
@@ -98,12 +105,18 @@ class PaymentController extends Controller
         $mpgAvsInfo = new mpgAvsInfo ();
         $mpgAvsInfo->mpgAvsInfo($avsTemplate);
 
+        /************************** CVD Object ********************************/
+
+        $mpgCvdInfo = new mpgCvdInfo();
+        $mpgCvdInfo->mpgCvdInfo($cvdTemplate);
+
 
         /**************************** Transaction Object *****************************/
 
         $mpgTxn = new mpgTransaction();
         $mpgTxn->mpgTransaction($txnArray);
         $mpgTxn->setAvsInfo($mpgAvsInfo);
+        $mpgTxn->setCvdInfo($mpgCvdInfo);
         /****************************** Request Object *******************************/
 
         $mpgRequest = new mpgRequest();
@@ -122,7 +135,6 @@ class PaymentController extends Controller
 
         /******************************* Response ************************************/
         $mpgResponse=$mpgHttpPost->getMpgResponse();
-
 
         print("\nCardType = " . $mpgResponse->getCardType());
         print("\nTransAmount = " . $mpgResponse->getTransAmount());
@@ -144,7 +156,6 @@ class PaymentController extends Controller
         print("\nStatusMessage = " . $mpgResponse->getStatusMessage());
         print("\nMCPAmount = " . $mpgResponse->getMCPAmount());
         print("\nMCPCurrenyCode = " . $mpgResponse->getMCPCurrencyCode());
-
 
     }
 

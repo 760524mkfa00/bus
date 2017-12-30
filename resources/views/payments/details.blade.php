@@ -16,56 +16,54 @@
                                     <div class="col">
                                         <h2>Billing Address</h2>
 
-                                        <div class="form-group{{ $errors->has('card_name') ? ' has-error' : '' }}">
-                                            <label for="card_name">Name on Card</label>
+                                        <div class="form-group{{ $errors->has('billing_first_name') ? ' has-error' : '' }}">
+                                            <label for="billing_first_name">First Name</label>
 
-                                            <input id="card_name" type="text" class="form-control" name="card_name"
-                                                   value="{{ old('card_name', $parent->card_name) }}" required autofocus>
+                                            <input id="billing_first_name" type="text" class="form-control" name="billing_first_name"
+                                                   value="{{ old('billing_first_name', $parent->billing_first_name) }}" required autofocus>
 
-                                            @if ($errors->has('card_name'))
+                                            @if ($errors->has('billing_first_name'))
                                                 <span class="help-block">
-                                        <strong>{{ $errors->first('card_name') }}</strong>
+                                        <strong>{{ $errors->first('billing_first_name') }}</strong>
                                     </span>
                                             @endif
                                         </div>
 
+                                        <div class="form-group{{ $errors->has('billing_last_name') ? ' has-error' : '' }}">
+                                            <label for="billing_last_name">Last Name</label>
 
+                                            <input id="billing_last_name" type="text" class="form-control" name="billing_last_name"
+                                                   value="{{ old('billing_last_name', $parent->billing_last_name) }}" required autofocus>
 
-                                        <div class="form-group{{ $errors->has('billing_address') ? ' has-error' : '' }}">
-                                            <label for="billing_address">Address</label>
-
-                                            <input id="billing_address" type="text" class="form-control" name="billing_address"
-                                                   value="{{ old('billing_address', $parent->billing_address) }}" required>
-
-                                            @if ($errors->has('billing_address'))
+                                            @if ($errors->has('billing_last_name'))
                                                 <span class="help-block">
-                                        <strong>{{ $errors->first('billing_address') }}</strong>
+                                        <strong>{{ $errors->first('billing_last_name') }}</strong>
                                     </span>
                                             @endif
                                         </div>
 
-                                        <div class="form-group{{ $errors->has('billing_city') ? ' has-error' : '' }}">
-                                            <label for="billing_city">City</label>
+                                        <div class="form-group{{ $errors->has('billing_address_number') ? ' has-error' : '' }}">
+                                            <label for="billing_address_number">Property Number</label>
 
-                                            <input id="billing_city" type="text" class="form-control" name="billing_city"
-                                                   value="{{ old('billing_city', $parent->billing_city) }}" required>
+                                            <input id="billing_address_number" type="text" class="form-control" name="billing_address_number"
+                                                   value="{{ old('billing_address_number', $parent->billing_address_number) }}" required>
 
-                                            @if ($errors->has('billing_city'))
+                                            @if ($errors->has('billing_address_number'))
                                                 <span class="help-block">
-                                        <strong>{{ $errors->first('billing_city') }}</strong>
+                                        <strong>{{ $errors->first('billing_address_number') }}</strong>
                                     </span>
                                             @endif
                                         </div>
 
-                                        <div class="form-group{{ $errors->has('billing_province') ? ' has-error' : '' }}">
-                                            <label for="billing_province">Province</label>
+                                        <div class="form-group{{ $errors->has('billing_address_street') ? ' has-error' : '' }}">
+                                            <label for="billing_address_street">Property Street</label>
 
-                                            <input id="billing_province" type="text" class="form-control" name="billing_province"
-                                                   value="{{ old('billing_province', $parent->billing_province) }}" required>
+                                            <input id="billing_address_street" type="text" class="form-control" name="billing_address_street"
+                                                   value="{{ old('billing_address_street', $parent->billing_address_street) }}" required>
 
-                                            @if ($errors->has('billing_province'))
+                                            @if ($errors->has('billing_address_street'))
                                                 <span class="help-block">
-                                        <strong>{{ $errors->first('billing_province') }}</strong>
+                                        <strong>{{ $errors->first('billing_address_street') }}</strong>
                                     </span>
                                             @endif
                                         </div>
@@ -129,7 +127,7 @@
                                             <div class="col-8">
                                                 <div class="form-group{{ $errors->has('expdate') ? ' has-error' : '' }}">
                                                     <label for="expdate">EXPIRATION DATE</label>
-                                                        <input id="expdate" type="text" class="form-control" name="expdate" placeholder="MM/YY" required>
+                                                        <input id="expdate" type="text" class="form-control" name="expdate" placeholder="YY/MM" required>
                                                     @if ($errors->has('expdate'))
                                                         <span class="help-block">
                                                      <strong>{{ $errors->first('expdate') }}</strong>
