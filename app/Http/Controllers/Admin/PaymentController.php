@@ -75,7 +75,7 @@ class PaymentController extends Controller
 
         $txnArray=array('type'=>$type,
             'order_id'=>$order_id,
-            'cust_id'=>$cust_id,
+            'cust_id'=>'kieran',
             'amount'=>$amount,
             'pan'=>$pan,
             'expdate'=>$expiry_date,
