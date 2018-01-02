@@ -30,6 +30,79 @@ class StudentsController extends Controller
     public function index()
     {
 
+        $filter = $this->setFilters();
+
+        $child = Child::with('order', 'order.parent', 'order.parent.order', 'order.parent.order.children', 'nextSchool', 'grade')
+            ->whereHas('order.parent', function ( $query ) use ($filter) {
+                if($filter) $query->telePhone($filter['phone']);
+            })
+            ->searchSeat($filter['seat'])
+            ->searchPaid($filter['paid'])
+            ->searchSubsidy($filter['subsidy'])
+            ->searchInternational($filter['international'])
+            ->searchProcessed($filter['processed'])
+            ->searchTag($filter['tag'])
+            ->searchCreated($filter['created_at'])
+            ->orderBy('first_name')
+            ->get();
+
+
+        foreach($child as $student) {
+            $student->order->parent->siblings = $student->order->parent->order->map( function($item, $key) {
+                return $item->children->count();
+            })->sum();
+        }
+
+        return view('student.index')
+            ->withStudents($child);
+
+    }
+
+
+    public function childList()
+    {
+
+//        $filter = Session::get('searchValues');
+//
+//
+//        $child = Child::with('order', 'order.parent', 'order.parent.order', 'order.parent.order.children', 'nextSchool', 'grade')
+//            ->whereHas('order.parent', function ( $query ) use ($filter) {
+//                if($filter) $query->telePhone($filter['phone']);
+//            })
+//            ->searchSeat($filter['seat'])
+//            ->searchPaid($filter['paid'])
+//            ->searchSubsidy($filter['subsidy'])
+//            ->searchInternational($filter['international'])
+//            ->searchProcessed($filter['processed'])
+//            ->searchTag($filter['tag'])
+//            ->searchCreated($filter['created_at'])
+//            ->orderBy('first_name')
+//            ->paginate(30);
+//
+//
+//
+//        $data = [];
+//        foreach($child as $key => $student) {
+//            $data[$key]['name'] = $student->fullName() . ' > ' . $student->order->parent->fullName();
+//            $data[$key]['sib'] = $student->order->parent->order->map( function($item, $key) {
+//                return $item->children->count();
+//            })->sum();
+//            $data[$key]['school'] = $student->nextSchool->school;
+//            $data[$key]['seat'] = ucfirst($student->seat_assigned);
+//            $data[$key]['international'] = ucfirst($student->international);
+//            $data[$key]['processed'] = ucfirst($student->processed);
+//        }
+//        $totalRows = $child->total();
+//        $childCount = $child->count();
+//
+//        return response()->json(["recordsTotal" =>  $totalRows,  "recordsFiltered" => $childCount,'data' => $data], 200);
+
+    }
+
+
+    public function setFilters()
+    {
+
         if(!$filter = \Request::all())
         {
             if (Session::exists('searchValues')) {
@@ -55,32 +128,13 @@ class StudentsController extends Controller
             }
 
         }
+
         Session::put('searchValues', $filter);
 
-
-        $child = Child::with('order', 'order.parent', 'order.parent.order', 'order.parent.order.children', 'nextSchool', 'grade')
-            ->whereHas('order.parent', function ( $query ) use ($filter) {
-                if($filter['phone']) $query->telePhone($filter['phone']);
-            })->searchSeat($filter['seat'])
-            ->searchPaid($filter['paid'])
-            ->searchSubsidy($filter['subsidy'])
-            ->searchInternational($filter['international'])
-            ->searchProcessed($filter['processed'])
-            ->searchTag($filter['tag'])
-            ->searchCreated($filter['created_at'])
-            ->orderBy('first_name')
-            ->get();
-
-            foreach($child as $student) {
-                $student->order->parent->siblings = $student->order->parent->order->map( function($item, $key) {
-                    return $item->children->count();
-                })->sum();
-            }
-
-        return view('student.index')
-            ->withStudents($child);
-
+        return $filter;
     }
+
+
 
     public function edit(User $user, Child $child)
     {

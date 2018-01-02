@@ -3,12 +3,12 @@
 namespace busRegistration\Http\Controllers\Admin;
 
 
-use busRegistration\Http\PaymentGateway\mpgAvsInfo;
-use busRegistration\Http\PaymentGateway\mpgCvdInfo;
-use busRegistration\Http\PaymentGateway\mpgHttpsPost;
-use busRegistration\Http\PaymentGateway\mpgRecur;
-use busRegistration\Http\PaymentGateway\mpgRequest;
-use busRegistration\Http\PaymentGateway\mpgTransaction;
+use busRegistration\Http\PaymentGateway\moneris\mpgAvsInfo;
+use busRegistration\Http\PaymentGateway\moneris\mpgCvdInfo;
+use busRegistration\Http\PaymentGateway\moneris\mpgHttpsPost;
+use busRegistration\Http\PaymentGateway\moneris\mpgRecur;
+use busRegistration\Http\PaymentGateway\moneris\mpgRequest;
+use busRegistration\Http\PaymentGateway\moneris\mpgTransaction;
 use busRegistration\User;
 use busRegistration\Order;
 use Carbon\Carbon;
@@ -36,8 +36,12 @@ class PaymentController extends Controller
     public function index(Order $order)
     {
 
-        if( $order->parent_id != Auth()->id() ) {
+        if ($order->parent_id != Auth()->id()) {
             return back()->withErrors('You do not have access to this page');
+        }
+
+        if ($order->netAmount() < 1) {
+            return back()->withErrors('You do not have a payment to make at this time.');
         }
 
         $parent = User::where('id', $order->parent_id)->first();
@@ -67,54 +71,50 @@ class PaymentController extends Controller
 
         dd($request->all());
 
-        if( $order->parent_id != Auth()->id() ) {
+        if ($order->parent_id != Auth()->id()) {
             return back()->withErrors('You do not have access to this page');
         }
 
         $details = $request->all();
+
+
 
         $details['expdate'] = preg_replace('/[^0-9]/', '', $details['expdate']);
 
 
         /************************* Transactional Variables ****************************/
 
-        $type='preauth';
-        $cust_id= $order->parent_id;
-        $order_id= 'SD23-' . $order->order_number;
-        $amount='10.30';
-        $pan=$details['pan'];
-        $expiry_date=$details['expdate'];
-        $crypt='7';
-//        $dynamic_descriptor='123';
-        $status_check = 'false';
+        $type = 'preauth';
+        $cust_id = $order->parent_id;
+        $order_id = 'SD23-' . $order->order_number;
+        $amount = '10.30';
+        $pan = $details['pan'];
+        $expiry_date = $details['expdate'];
+        $crypt = '7';
 
         /******************* Customer Information Variables ********************/
 
-        $first_name = $details['billing_first_name'];
-        $last_name = $details['billing_last_name'];
         $number = $details['billing_address_number'];
         $street = $details['billing_address_street'];
         $postal_code = $details['billing_postal_code'];
-        $email =$details['email'];
+        $email = $details['email'];
         /*********************** Transactional Associative Array **********************/
 
-        $txnArray=array('type'=>$type,
-            'order_id'=>$order_id,
-            'cust_id'=>'kieran',
-            'amount'=>$amount,
-            'pan'=>$pan,
-            'expdate'=>$expiry_date,
-            'crypt_type'=>$crypt
+        $txnArray = array('type' => $type,
+            'order_id' => $order_id,
+            'cust_id' => $cust_id,
+            'amount' => $amount,
+            'pan' => $pan,
+            'expdate' => $expiry_date,
+            'crypt_type' => $crypt
         );
 
         /********************** AVS Associative Array *************************/
 
         $avsTemplate = array(
-
-            'avs_street_number'=> $number,
+            'avs_street_number' => $number,
             'avs_street_name' => $street,
             'avs_zipcode' => $postal_code
-//            'avs_email' => $email,
         );
 
         /********************** CVD Associative Array *************************/
@@ -155,12 +155,12 @@ class PaymentController extends Controller
         $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgRequest);
         */
 
-        $mpgHttpPost  =new mpgHttpsPost();
-        $mpgHttpPost->mpgHttpsPost('store5','yesguy',$mpgRequest);
+        $mpgHttpPost = new mpgHttpsPost();
+        $mpgHttpPost->mpgHttpsPost('store5', 'yesguy', $mpgRequest);
 //        $mpgHttpPost->mpgHttpsPost($this->store_id,$this->api_token,$mpgRequest);
 
         /******************************* Response ************************************/
-        $mpgResponse=$mpgHttpPost->getMpgResponse();
+        $mpgResponse = $mpgHttpPost->getMpgResponse();
 
         print("\nCardType = " . $mpgResponse->getCardType());
         print("\nTransAmount = " . $mpgResponse->getTransAmount());
@@ -186,7 +186,6 @@ class PaymentController extends Controller
     }
 
 
-
     /*
      * Recurring payments
      *
@@ -205,7 +204,7 @@ class PaymentController extends Controller
 
         /************************* Transactional Variables ****************************/
 
-        $orderId = 'ord-'.date("dmy-G:i:s");
+        $orderId = 'ord-' . date("dmy-G:i:s");
         $custId = 'student_number';
         $creditCard = '5454545454545454';
         $nowAmount = '10.00';
@@ -214,12 +213,12 @@ class PaymentController extends Controller
 
         /*********************** Recur Associative Array **********************/
 
-        $recurArray = array('recur_unit'=>$recurUnit, // (day | week | month)
-            'start_date'=>$startDate, //yyyy/mm/dd
-            'num_recurs'=>$numRecurs,
-            'start_now'=>$startNow,
+        $recurArray = array('recur_unit' => $recurUnit, // (day | week | month)
+            'start_date' => $startDate, //yyyy/mm/dd
+            'num_recurs' => $numRecurs,
+            'start_now' => $startNow,
             'period' => $recurInterval,
-            'recur_amount'=> $recurAmount
+            'recur_amount' => $recurAmount
         );
 
         $mpgRecur = new mpgRecur();
@@ -227,13 +226,13 @@ class PaymentController extends Controller
 
         /*********************** Transactional Associative Array **********************/
 
-        $txnArray=array('type'=>'purchase',
-            'order_id'=>$orderId,
-            'cust_id'=>$custId,
-            'amount'=>$nowAmount,
-            'pan'=>$creditCard,
-            'expdate'=>$expiryDate,
-            'crypt_type'=>$cryptType
+        $txnArray = array('type' => 'purchase',
+            'order_id' => $orderId,
+            'cust_id' => $custId,
+            'amount' => $nowAmount,
+            'pan' => $creditCard,
+            'expdate' => $expiryDate,
+            'crypt_type' => $cryptType
         );
 
         /**************************** Transaction Object *****************************/
@@ -255,11 +254,11 @@ class PaymentController extends Controller
         /***************************** HTTPS Post Object *****************************/
 
         $mpgHttpPost = new mpgHttpsPost();
-        $mpgHttpPost->mpgHttpsPost('store5','yesguy', $mpgRequest);
+        $mpgHttpPost->mpgHttpsPost('store5', 'yesguy', $mpgRequest);
 
         /******************************* Response ************************************/
 
-        $mpgResponse=$mpgHttpPost->getMpgResponse();
+        $mpgResponse = $mpgHttpPost->getMpgResponse();
 
         print ("\nCardType = " . $mpgResponse->getCardType());
         print("\nTransAmount = " . $mpgResponse->getTransAmount());

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace busRegistration\Http\PaymentGateway;
+namespace busRegistration\Http\PaymentGateway\moneris;
 
 #################### mpgGlobals #############################################
 

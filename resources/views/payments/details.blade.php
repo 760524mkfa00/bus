@@ -113,24 +113,23 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="paymentOption" id="full" value="full" checked>
                                                     <label class="form-check-label" for="full">
-                                                        Make full payment of {{ $options['full'] }}
+                                                        Make full payment of $ {{ number_format($options['full'], 2) }}
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="paymentOption" id="split" value="split">
                                                     <label class="form-check-label" for="split">
-                                                        Two payments of {{ $options['split'] }} (Today then {{ $options['plusMonth'] }})
+                                                        Two payments of $ {{ number_format($options['split'], 2) }} (Today then {{ $options['plusMonth'] }})
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="paymentOption" id="multiple" value="multiple">
                                                     <label class="form-check-label" for="multiple">
-                                                        {{ $options['multipleMonths'] }} Monthly payments of {{ $options['multiple'] }}
+                                                        {{ $options['multipleMonths'] }} Monthly payments of $ {{ number_format($options['multiple'], 2) }}
                                                     </label>
                                                 </div>
                                                 <br />
                                             </div>
-
                                         </div>
 
 
@@ -148,19 +147,35 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-8">
-                                                <div class="form-group{{ $errors->has('expdate') ? ' has-error' : '' }}">
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <label for="expdate">EXPIRATION DATE</label>
-                                                        <input id="expdate" type="text" class="form-control" name="expdate" placeholder="YY/MM" required>
-                                                    @if ($errors->has('expdate'))
-                                                        <span class="help-block">
-                                                     <strong>{{ $errors->first('expdate') }}</strong>
-                                                </span>
-                                                    @endif
+                                                    <select name="expiry_month" class="form-control" id="expiry_month">
+                                                        <option value="01">01 - January</option>
+                                                        <option value="02">02 - February</option>
+                                                        <option value="03">03 - March</option>
+                                                        <option value="04">04 - April</option>
+                                                        <option value="05">05 - May</option>
+                                                        <option value="06">06 - June</option>
+                                                        <option value="07">07 - July</option>
+                                                        <option value="08">08 - August</option>
+                                                        <option value="09">09 - September</option>
+                                                        <option value="10">10 - October</option>
+                                                        <option value="11">11 - November</option>
+                                                        <option value="12">12 - December</option>
+                                                    </select>
+                                                    <br />
+                                                    <select name="expiry_year" class="form-control" id="expiry_year">
+                                                        <?php
+                                                        $year = (int) date('Y');
+                                                        for ($i = $year; $i < $year + 20; $i++ ): ?>
+                                                        <option value="<?= substr((string) $i, -2); ?>"><?= $i; ?></option>
+                                                        <?php endfor; ?>
+                                                    </select>
                                                 </div>
                                             </div>
 
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <div class="form-group{{ $errors->has('cvc') ? ' has-error' : '' }}">
                                                     <label for="cvc">CVC CODE</label>
                                                         <input id="cvc" type="text" class="form-control" name="cvc" placeholder="CVC" required>

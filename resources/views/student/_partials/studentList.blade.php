@@ -7,21 +7,22 @@
     </div>
     <div class="card-body">
         <table class="table table-bordered table-sm" id="table">
-            <thead class="">
-            <th scope="col">Name</th>
-            <th scope="col">Sib</th>
-            <th scope="col">School</th>
-            <th class="nosort" scope="col">Seat</th>
-            <th class="nosort" scope="col">International</th>
-            <th class="nosort" scope="col">Processed</th>
-            {{--@can('create', busRegistration\Child::class)--}}
-                {{--<th scope="col" class="nosort">Edit</th>--}}
-                {{--<th scope="col" class="nosort">Remove</th>--}}
-            {{--@endcan--}}
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Sib</th>
+                    <th scope="col">School</th>
+                    <th class="nosort" scope="col">Seat</th>
+                    <th class="nosort" scope="col">International</th>
+                    <th class="nosort" scope="col">Processed</th>
+                </tr>
             </thead>
             <tbody>
                 @include('student._partials._partials.listLoop')
             </tbody>
         </table>
+
+{{--        {{ $students->links() }}--}}
+
     </div>
 </div>
