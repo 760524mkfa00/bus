@@ -17,14 +17,14 @@
     <script>
         $(document).ready(function () {
 
-            $(function () {
-                $('#table').DataTable({
-                    aoColumnDefs: [{
-                        'bSortable': false,
-                        'aTargets': ['nosort']
-                    }]
-                });
-            });
+            // $(function () {
+            //     $('#table').DataTable({
+            //         aoColumnDefs: [{
+            //             'bSortable': false,
+            //             'aTargets': ['nosort']
+            //         }]
+            //     });
+            // });
 
             $( "#created_at" ).datepicker({
                 dateFormat: "yy-mm-dd"

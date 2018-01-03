@@ -111,6 +111,12 @@ class Child extends Model
 
     }
 
+    public function scopeSearchStudentName($query, $studentName)
+    {
+        if ($studentName) $query->where('first_name', 'like', "%{$studentName}%")
+                                ->orWhere('last_name', 'like', "%{$studentName}%");
+    }
+
 
     public function fullName()
     {

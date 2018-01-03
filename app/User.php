@@ -134,4 +134,10 @@ class User extends Authenticatable
             ->orWhere('secondary_phone', 'like', "%{$number}%");
     }
 
+    public function scopeSearchParentName($query, $parentName)
+    {
+        if ($parentName) $query->where('first_name', 'like', "%{$parentName}%")
+            ->orWhere('last_name', 'like', "%{$parentName}%");
+    }
+
 }

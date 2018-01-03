@@ -4,7 +4,17 @@
     </div>
     <div class="card-body">
 
-        <form action="">
+        <form action="{{ route('list_student', $_GET) }}">
+            <h6><strong>Name Search</strong></h6>
+
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+                <input type="text" class="form-control" placeholder="Student First or Last Name" name="studentName"  value="{{ \Session::get('searchValues')['studentName'] ?? '' }}">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+                <input type="text" class="form-control" placeholder="Parent First or Last Name" name="parentName"  value="{{ \Session::get('searchValues')['parentName'] ?? '' }}">
+            </div>
+
             <h6><strong>Phone Search</strong></h6>
 
             <div class="form-group" style="margin-bottom: 0.5rem;">

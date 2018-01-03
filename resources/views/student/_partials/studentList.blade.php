@@ -9,7 +9,7 @@
         <table class="table table-bordered table-sm" id="table">
             <thead>
                 <tr>
-                    <th scope="col">Name</th>
+                    <th scope="col">{!! sort_students_by('first_name', 'Name') !!}</th>
                     <th scope="col">Sib</th>
                     <th scope="col">School</th>
                     <th class="nosort" scope="col">Seat</th>
@@ -21,8 +21,14 @@
                 @include('student._partials._partials.listLoop')
             </tbody>
         </table>
-
-{{--        {{ $students->links() }}--}}
-
+        <div class="row">
+            <div class="col">
+                Showing {{($students->currentpage()-1)*$students->perpage()+1}} to {{$students->currentpage()*$students->perpage()}}
+                of  {{$students->total()}} entries
+            </div>
+            <div class="col">
+                <span class="float-right">{{ $students->appends($_GET)->links() }}</span>
+            </div>
+        </div>
     </div>
 </div>

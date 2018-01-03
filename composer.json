@@ -26,7 +26,8 @@
             "busRegistration\\": "app/"
         },
         "files": [
-            "app/Http/PaymentGateway/moneris/mpgClasses.php"
+            "app/Http/PaymentGateway/moneris/mpgClasses.php",
+            "app/Helpers/helpers.php"
          ]
 
     },

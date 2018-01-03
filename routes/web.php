@@ -93,9 +93,6 @@ Route::group(['prefix' => 'student'], function () {
         ->name('update_student')
         ->middleware('can:create,busRegistration\Child');
 
-    Route::get('/api/list', 'admin\StudentsController@childList')
-        ->name('list_of_students');
-
 });
 
 
