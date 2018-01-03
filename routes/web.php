@@ -38,7 +38,7 @@ Route::group(['prefix' => 'users'], function () {
         ->name('remove_user')
         ->middleware('can:update,user');
 
-    Route::get('/update/{user}', 'admin\ParentController@update')
+    Route::get('/update/{user}', 'Admin\ParentController@update')
         ->name('update_parent')
         ->middleware('can:create,user');
 
@@ -75,21 +75,21 @@ Route::group(['prefix' => 'users/roles'], function () {
 
 Route::group(['prefix' => 'student'], function () {
 
-    Route::get('/create', 'application\applicationController@registerStudent')
+    Route::get('/create', 'Application\ApplicationController@registerStudent')
         ->name('student_create');
 
-    Route::post('/store', 'application\applicationController@storeStudent')
+    Route::post('/store', 'Application\ApplicationController@storeStudent')
         ->name('store_student');
 
-    Route::get('/list', 'admin\StudentsController@index')
+    Route::get('/list', 'Admin\StudentsController@index')
         ->name('list_student')
         ->middleware('can:view,busRegistration\Child');
 
-    Route::get('/edit/{user}/{child}', 'admin\StudentsController@edit')
+    Route::get('/edit/{user}/{child}', 'Admin\StudentsController@edit')
         ->name('edit_student')
         ->middleware('can:create,busRegistration\Child');
 
-    Route::post('/update/{user}/{child}', 'admin\StudentsController@update')
+    Route::post('/update/{user}/{child}', 'Admin\StudentsController@update')
         ->name('update_student')
         ->middleware('can:create,busRegistration\Child');
 
