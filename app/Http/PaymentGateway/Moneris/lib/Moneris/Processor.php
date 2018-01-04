@@ -91,6 +91,7 @@ class Moneris_Processor
      */
     static public function process(Moneris_Transaction $transaction)
     {
+
         if (! $transaction->is_valid()) {
             $result = new Moneris_Result($transaction);
             $result->was_successful(false);
@@ -137,6 +138,8 @@ class Moneris_Processor
         curl_setopt($ch, CURLOPT_TIMEOUT, $config['timeout']);
         curl_setopt($ch, CURLOPT_USERAGENT, $config['api_version']);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); //disables curl verifier
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // value changed to 0, the connection succeeds regardless of the names in the certificate. Use that ability with caution
         $response = curl_exec($ch);
         curl_close($ch);
         // if the response fails for any reason, just use some stock XML

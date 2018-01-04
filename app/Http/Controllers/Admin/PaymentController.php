@@ -31,9 +31,9 @@ class PaymentController extends Controller
     {
         $this->moneris = Moneris::create(
             array(
-                'api_key' => 'yesguy',
-                'store_id' => 'store5',
-                'environment' => Moneris::ENV_TESTING_CA,
+                'api_key' => env('MONERIS_KEY'),
+                'store_id' => env('MONERIS_ID'),
+                'environment' => Moneris::ENV_STAGING_CA,
                 'require_avs' => true,
                 'require_cvd' => true
             ));
@@ -105,9 +105,9 @@ class PaymentController extends Controller
 
         $params = [
 //            'order_id' => $order->order_number,
-            'order_id' => $order_id='ord-'.date("dmy-G:i:s"),
+            'order_id' => $order_id='SD23-'.date("dmy-G:i:s"),
             'cc_number' => $details['pan'],
-            'amount' => '0.14',
+            'amount' => '10.30',
             'expiry_month' => $details['expiry_month'],
             'expiry_year' => $details['expiry_year'],
             'avs_street_number' => $details['billing_address_number'],
@@ -121,6 +121,8 @@ class PaymentController extends Controller
 
         $errors = array();
         $verification_result = $this->moneris->verify($params);
+
+        dd($verification_result);
 
         if ($verification_result->was_successful() && $verification_result->passed_avs() && $verification_result->passed_cvd()) {
 
