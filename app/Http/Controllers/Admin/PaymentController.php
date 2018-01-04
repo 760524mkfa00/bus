@@ -106,7 +106,7 @@ class PaymentController extends Controller
         $params = [
             'order_id' => $order->order_number,
             'cc_number' => $details['pan'],
-            'amount' => '10.30',
+            'amount' => '10.24',
             'expiry_month' => $details['expiry_month'],
             'expiry_year' => $details['expiry_year'],
             'avs_street_number' => $details['billing_address_number'],
