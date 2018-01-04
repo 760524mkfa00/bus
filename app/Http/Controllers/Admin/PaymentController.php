@@ -89,9 +89,9 @@ class PaymentController extends Controller
 
 
         $params = [
-            'order_id' => $order_id='SD24-'.date("dmy-G:i:s"),
+            'order_id' => $order->order_number,
             'cc_number' => $details['pan'],
-            'amount' => '252.30',
+            'amount' => $order->netAmount(),
             'expiry_month' => $details['expiry_month'],
             'expiry_year' => $details['expiry_year'],
             'avs_street_number' => $details['billing_address_number'],
@@ -115,8 +115,6 @@ class PaymentController extends Controller
             dd('it worked!!');
             // OMG we're rich!
         }
-
-
     }
 
 
