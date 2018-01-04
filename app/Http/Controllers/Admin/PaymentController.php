@@ -36,8 +36,8 @@ class PaymentController extends Controller
                 'api_key' => 'yesguy',
                 'store_id' => 'store5',
                 'environment' => Moneris::ENV_TESTING,
-                'require_avs' => false,
-                'require_cvd' => false
+                'require_avs' => true,
+                'require_cvd' => true
             ));
     }
 
@@ -85,28 +85,10 @@ class PaymentController extends Controller
             return back()->withErrors('You do not have access to this page');
         }
 
-        /**
-         * Make a purchase.
-         *
-         * @param array $params An associative array.
-         * 		Required:
-         *			- order_id string A unique transaction ID, up to 50 chars
-         * 			- cc_number int Any non-numeric characters will be stripped
-         *			- amount float
-         *			- expiry_month int 2 digit representation of the expiry month (01-12)
-         * 			- expiry_year int last two digits of the expiry year
-         * 			- avs_street_number string Up to 19 chars combined with street name
-         *			- avs_street_name string
-         * 			- avs_zipcode string Up to 10 chars
-         *			- cvd
-
-         */
-
         $details = $request->all();
 
 
         $params = [
-//            'order_id' => $order->order_number,
             'order_id' => $order_id='SD23-'.date("dmy-G:i:s"),
             'cc_number' => $details['pan'],
             'amount' => '10.30',
