@@ -3,6 +3,8 @@
 
 namespace busRegistration\Http\PaymentGateway\moneris;
 
+use busRegistration\Order;
+
 class paymentActions
 {
 
@@ -19,7 +21,7 @@ class paymentActions
         $this->api_token = env('MONERIS_KEY');
     }
 
-    public function pay($details)
+    public function pay($details, Order $order)
     {
 
         /************************* Transactional Variables ****************************/
@@ -70,6 +72,7 @@ class paymentActions
         );
 
 
+        dd($order);
         /************************** AVS Object ********************************/
 
         $mpgAvsInfo = new mpgAvsInfo ();
@@ -107,26 +110,44 @@ class paymentActions
         /******************************* Response ************************************/
         $mpgResponse = $mpgHttpPost->getMpgResponse();
 
-        print("\nCardType = " . $mpgResponse->getCardType());
-        echo '<br />';print("\nTransAmount = " . $mpgResponse->getTransAmount());
-        echo '<br />';print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
-        echo '<br />';print("\nReceiptId = " . $mpgResponse->getReceiptId());
-        echo '<br />';print("\nTransType = " . $mpgResponse->getTransType());
-        echo '<br />';print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
-        echo '<br />';print("\nResponseCode = " . $mpgResponse->getResponseCode());
-        echo '<br />';print("\nISO = " . $mpgResponse->getISO());
-        echo '<br />';print("\nMessage = " . $mpgResponse->getMessage());
-        echo '<br />';print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
-        echo '<br />';print("\nAuthCode = " . $mpgResponse->getAuthCode());
-        echo '<br />';print("\nComplete = " . $mpgResponse->getComplete());
-        echo '<br />';print("\nTransDate = " . $mpgResponse->getTransDate());
-        echo '<br />';print("\nTransTime = " . $mpgResponse->getTransTime());
-        echo '<br />';print("\nTicket = " . $mpgResponse->getTicket());
-        echo '<br />';print("\nTimedOut = " . $mpgResponse->getTimedOut());
-        echo '<br />';print("\nStatusCode = " . $mpgResponse->getStatusCode());
-        echo '<br />';print("\nStatusMessage = " . $mpgResponse->getStatusMessage());
-        echo '<br />';print("\nMCPAmount = " . $mpgResponse->getMCPAmount());
-        echo '<br />';print("\nMCPCurrenyCode = " . $mpgResponse->getMCPCurrencyCode());
+        if ( (int) $mpgResponse->getStatusCode() >= 50) {
+            return back()->withErrors($mpgResponse->getMessage());
+        }
+
+        $order->update([
+            'paid_amount' => $mpgResponse->getTransAmount(),
+            'reference_number' => $mpgResponse->getReferenceNum(),
+            'transaction_number' => $mpgResponse->getTxnNumber(),
+            'card_type' => $mpgResponse->getCardType(),
+            'message' =>$mpgResponse->getMessage(),
+            'auth_code' => $mpgResponse->getAuthCode(),
+            'transaction_date' => $mpgResponse->getTransDate()
+        ]);
+
+
+
+//        print("\nCardType = " . $mpgResponse->getCardType());
+//        echo '<br />';print("\nTransAmount = " . $mpgResponse->getTransAmount());
+//        echo '<br />';print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
+//        echo '<br />';print("\nReceiptId = " . $mpgResponse->getReceiptId());
+//        echo '<br />';print("\nTransType = " . $mpgResponse->getTransType());
+//        echo '<br />';print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
+//        echo '<br />';print("\nResponseCode = " . $mpgResponse->getResponseCode());
+//        echo '<br />';print("\nISO = " . $mpgResponse->getISO());
+//        echo '<br />';print("\nMessage = " . $mpgResponse->getMessage());
+//        echo '<br />';print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
+//        echo '<br />';print("\nAuthCode = " . $mpgResponse->getAuthCode());
+//        echo '<br />';print("\nComplete = " . $mpgResponse->getComplete());
+//        echo '<br />';print("\nTransDate = " . $mpgResponse->getTransDate());
+//        echo '<br />';print("\nTransTime = " . $mpgResponse->getTransTime());
+//        echo '<br />';print("\nTicket = " . $mpgResponse->getTicket());
+//        echo '<br />';print("\nTimedOut = " . $mpgResponse->getTimedOut());
+//        echo '<br />';print("\nStatusCode = " . $mpgResponse->getStatusCode());
+//        echo '<br />';print("\nStatusMessage = " . $mpgResponse->getStatusMessage());
+//        echo '<br />';print("\nMCPAmount = " . $mpgResponse->getMCPAmount());
+//        echo '<br />';print("\nMCPCurrenyCode = " . $mpgResponse->getMCPCurrencyCode());
+
+
     }
 
 

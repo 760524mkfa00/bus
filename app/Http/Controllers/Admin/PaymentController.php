@@ -88,7 +88,7 @@ class PaymentController extends Controller
         $details['orderNumber'] = $order->order_number;
         $details['amount'] = '10.30';
 
-        $this->paymentGateway->pay($details);
+        $this->paymentGateway->pay($details, $order);
 
     }
 
