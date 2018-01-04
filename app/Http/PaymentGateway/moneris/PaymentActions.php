@@ -71,8 +71,6 @@ class paymentActions
             'cvd_value' => $cvd_value
         );
 
-
-        dd($order);
         /************************** AVS Object ********************************/
 
         $mpgAvsInfo = new mpgAvsInfo ();
