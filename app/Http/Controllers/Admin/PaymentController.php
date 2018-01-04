@@ -114,7 +114,7 @@ class PaymentController extends Controller
         } else {
             $transaction = $purchase_result->transaction()->response();
 
-            dd($transaction->response);
+            dd( (string) $transaction->response->Message);
 
             $responseData = [
                 'TransID' => $transaction->TransID,
