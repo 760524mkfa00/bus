@@ -108,6 +108,7 @@ class paymentActions
         /******************************* Response ************************************/
         $mpgResponse = $mpgHttpPost->getMpgResponse();
 
+        // TODO: need to get this check working and handle responses properly
         if ( (int) $mpgResponse->getStatusCode() >= 50) {
             return back()->withErrors($mpgResponse->getMessage());
         }
@@ -121,6 +122,8 @@ class paymentActions
             'auth_code' => $mpgResponse->getAuthCode(),
             'transaction_date' => $mpgResponse->getTransDate()
         ]);
+
+        // TODO mark students in the order as paid
 
 
 
