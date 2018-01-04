@@ -127,6 +127,7 @@ class PaymentController extends Controller
             $purchase_result = $this->moneris->purchase($params);
 
             if ($purchase_result->was_successful()) {
+                dd($purchase_result);
                 dd('you got a payment success');
                 // HOORAY! Party like it's 1999.
             } else {
