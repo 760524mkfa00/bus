@@ -106,7 +106,7 @@ class PaymentController extends Controller
         $errors = array();
         $purchase_result = $this->moneris->purchase($params);
 
-        if ($purchase_result->was_successful() && ( $purchase->failed_avs() || $purchase_result->failed_cvd() )) {
+        if ($purchase_result->was_successful() && ( $purchase_result->failed_avs() || $purchase_result->failed_cvd() )) {
             $errors[] = $purchase_result->error_message();
             $void = $this->moneris->void($purchase_result->transaction());
         } else if (! $purchase_result->was_successful()) {
