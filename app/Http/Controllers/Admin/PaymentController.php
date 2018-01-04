@@ -109,10 +109,21 @@ class PaymentController extends Controller
         if ($purchase_result->was_successful() && ( $purchase_result->failed_avs() || $purchase_result->failed_cvd() )) {
             $errors[] = $purchase_result->error_message();
             $void = $this->moneris->void($purchase_result->transaction());
+
+            return back()->withErrors($errors);
+
         } else if (! $purchase_result->was_successful()) {
             $errors[] = $purchase_result->error_message();
+
+            return back()->withErrors($errors);
+
         } else {
             $transaction = $purchase_result->transaction()->response();
+
+            if((string) $transaction->receipt->Complete === 'false')
+            {
+                return back()->withErrors('There was a problem with the transaction: ' . (string) $transaction->receipt->Message . '. The amount taken from your card was ' . (string) $transaction->receipt->TransAmount);
+            }
 
             $responseData = [
                 'TransID' => (string) $transaction->receipt->TransID,
@@ -126,11 +137,8 @@ class PaymentController extends Controller
                 'Complete' => (string) $transaction->receipt->Complete,
                 'Message' => (string) $transaction->receipt->Message
             ];
-
-            dd($responseData);
         }
-
-
+        
 
     }
 
