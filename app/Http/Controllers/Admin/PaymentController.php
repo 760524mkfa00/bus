@@ -134,6 +134,8 @@ class PaymentController extends Controller
                 dd($errors);
             }
 
+        } else {
+            return back()->withErrors($verification_result->error_message());
         }
 
 
