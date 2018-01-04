@@ -17,6 +17,8 @@ class PaymentController extends Controller
 
     protected $moneris;
 
+    protected $errors = [];
+
 
     public function __construct()
     {
@@ -55,25 +57,36 @@ class PaymentController extends Controller
 
 
         $parent = User::where('id', $order->parent_id)->first();
-        $ordering = $order->where('id', $order->id)->with('children')->first();
+        $orders = $order->where('id', $order->id)->with('children')->first();
 
+        $paymentOptions = $this->paymentOptions($orders);
+
+
+        return view('payments.details')
+            ->withParent($parent)
+            ->withOrder($orders)
+            ->withOptions($paymentOptions);
+    }
+
+
+    private function paymentOptions(Order $order)
+    {
+
+//        TODO: set the year to use the config year +1 as this is the end date payments can go to.
         $end = Carbon::parse('2018-06-01');
         $now = Carbon::now();
         $length = $end->diffInMonths($now);
 
 
-        $paymentOptions['full'] = $ordering->netAmount();
+        $paymentOptions['full'] = $order->netAmount();
         $paymentOptions['split'] = $paymentOptions['full'] / 2;
         $paymentOptions['multiple'] = $paymentOptions['full'] / $length;
         $paymentOptions['now'] = $now->format('M/D/YY');
         $paymentOptions['plusMonth'] = $now->addDays(30)->format('M d, Y');
         $paymentOptions['multipleMonths'] = $length;
 
+        return $paymentOptions;
 
-        return view('payments.details')
-            ->withParent($parent)
-            ->withOrder($ordering)
-            ->withOptions($paymentOptions);
     }
 
 
@@ -101,44 +114,19 @@ class PaymentController extends Controller
         ];
 
 
-        $this->config();
+        $transaction = $this->purchase($params);
 
-        $errors = array();
-        $purchase_result = $this->moneris->purchase($params);
-
-        if ($purchase_result->was_successful() && ( $purchase_result->failed_avs() || $purchase_result->failed_cvd() )) {
-            $errors[] = $purchase_result->error_message();
-            $void = $this->moneris->void($purchase_result->transaction());
-
-            return back()->withErrors($errors);
-
-        } else if (! $purchase_result->was_successful()) {
-            $errors[] = $purchase_result->error_message();
-
-            return back()->withErrors($errors);
-
-        } else {
-            $transaction = $purchase_result->transaction()->response();
-
-            if((string) $transaction->receipt->Complete === 'false')
-            {
-                return back()->withErrors('There was a problem with the transaction: ' . (string) $transaction->receipt->Message . '. The amount taken from your card was ' . (string) $transaction->receipt->TransAmount);
-            }
-
-            $responseData = [
-                'TransID' => (string) $transaction->receipt->TransID,
-                'ReferenceNum' => (string) $transaction->receipt->ReferenceNum,
-                'AuthCode' => (string) $transaction->receipt->AuthCode,
-                'TransDate' => (string) $transaction->receipt->TransDate,
-                'TransAmount' => (string) $transaction->receipt->TransAmount,
-                'CardType' => (string) $transaction->receipt->CardType,
-                'ReceiptId' => (string) $transaction->receipt->ReceiptId,
-                'TransTime' => (string) $transaction->receipt->TransTime,
-                'Complete' => (string) $transaction->receipt->Complete,
-                'Message' => (string) $transaction->receipt->Message
-            ];
+        if ((string)$transaction->receipt->Complete === 'false') {
+            return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
         }
-        
+
+        if($this->errors) {
+            return back()->withErrors($this->errors);
+        }
+
+        $order = $this->updateOrder($transaction);
+
+        // TODO: Mark the students within this order as paid
 
     }
 
@@ -151,89 +139,46 @@ class PaymentController extends Controller
 
     public function recurringPayment()
     {
-//        /********************************* Recur Variables ****************************/
-//        $recurUnit = 'eom';
-//        $startDate = '2018/11/30';
-//        $numRecurs = '4';
-//        $recurInterval = '10';
-//        $recurAmount = '31.00';
-//        $startNow = 'true';
-//
-//        /************************* Transactional Variables ****************************/
-//
-//        $orderId = 'ord-' . date("dmy-G:i:s");
-//        $custId = 'student_number';
-//        $creditCard = '5454545454545454';
-//        $nowAmount = '10.00';
-//        $expiryDate = '0912';
-//        $cryptType = '7';
-//
-//        /*********************** Recur Associative Array **********************/
-//
-//        $recurArray = array('recur_unit' => $recurUnit, // (day | week | month)
-//            'start_date' => $startDate, //yyyy/mm/dd
-//            'num_recurs' => $numRecurs,
-//            'start_now' => $startNow,
-//            'period' => $recurInterval,
-//            'recur_amount' => $recurAmount
-//        );
-//
-//        $mpgRecur = new mpgRecur();
-//        $mpgRecur->mpgRecur($recurArray);
-//
-//        /*********************** Transactional Associative Array **********************/
-//
-//        $txnArray = array('type' => 'purchase',
-//            'order_id' => $orderId,
-//            'cust_id' => $custId,
-//            'amount' => $nowAmount,
-//            'pan' => $creditCard,
-//            'expdate' => $expiryDate,
-//            'crypt_type' => $cryptType
-//        );
-//
-//        /**************************** Transaction Object *****************************/
-//
-//        $mpgTxn = new mpgTransaction();
-//        $mpgTxn->mpgTransaction($txnArray);
-//
-//        /****************************** Recur Object *********************************/
-//
-//        $mpgTxn->setRecur($mpgRecur);
-//
-//        /****************************** Request Object *******************************/
-//
-//        $mpgRequest = new mpgRequest();
-//        $mpgRequest->mpgRequest($mpgTxn);
-//        $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
-//        $mpgRequest->setTestMode(true); //false or comment out this line for production transactions
-//
-//        /***************************** HTTPS Post Object *****************************/
-//
-//        $mpgHttpPost = new mpgHttpsPost();
-//        $mpgHttpPost->mpgHttpsPost('store5', 'yesguy', $mpgRequest);
-//
-//        /******************************* Response ************************************/
-//
-//        $mpgResponse = $mpgHttpPost->getMpgResponse();
-//
-//        print ("\nCardType = " . $mpgResponse->getCardType());
-//        print("\nTransAmount = " . $mpgResponse->getTransAmount());
-//        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
-//        print("\nReceiptId = " . $mpgResponse->getReceiptId());
-//        print("\nTransType = " . $mpgResponse->getTransType());
-//        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
-//        print("\nResponseCode = " . $mpgResponse->getResponseCode());
-//        print("\nISO = " . $mpgResponse->getISO());
-//        print("\nMessage = " . $mpgResponse->getMessage());
-//        print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
-//        print("\nAuthCode = " . $mpgResponse->getAuthCode());
-//        print("\nComplete = " . $mpgResponse->getComplete());
-//        print("\nTransDate = " . $mpgResponse->getTransDate());
-//        print("\nTransTime = " . $mpgResponse->getTransTime());
-//        print("\nTicket = " . $mpgResponse->getTicket());
-//        print("\nTimedOut = " . $mpgResponse->getTimedOut());
-//        print("\nRecurSuccess = " . $mpgResponse->getRecurSuccess());
+
+    }
+
+    /**
+     * @param $params
+     * @return $this|array
+     */
+    private function purchase($params)
+    {
+        $this->config();
+
+        $purchase_result = $this->moneris->purchase($params);
+
+        if ($purchase_result->was_successful() && ($purchase_result->failed_avs() || $purchase_result->failed_cvd())) {
+            $this->errors = $purchase_result->error_message();
+            $void = $this->moneris->void($purchase_result->transaction());
+        } else if (!$purchase_result->was_successful()) {
+            $this->errors = $purchase_result->error_message();
+        }
+
+        return $purchase_result->transaction()->response();
+    }
+
+    private function updateOrder($transaction)
+    {
+
+        $responseData = [
+            'TransID' => (string)$transaction->receipt->TransID,
+            'ReferenceNum' => (string)$transaction->receipt->ReferenceNum,
+            'AuthCode' => (string)$transaction->receipt->AuthCode,
+            'TransDate' => (string)$transaction->receipt->TransDate,
+            'TransAmount' => (string)$transaction->receipt->TransAmount,
+            'CardType' => (string)$transaction->receipt->CardType,
+            'ReceiptId' => (string)$transaction->receipt->ReceiptId,
+            'TransTime' => (string)$transaction->receipt->TransTime,
+            'Complete' => (string)$transaction->receipt->Complete,
+            'Message' => (string)$transaction->receipt->Message
+        ];
+
+        return $responseData;
     }
 
 }
