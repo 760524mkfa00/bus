@@ -89,7 +89,7 @@ class PaymentController extends Controller
 
 
         $params = [
-            'order_id' => $order_id='SD23-'.date("dmy-G:i:s"),
+            'order_id' => $order_id='SD24-'.date("dmy-G:i:s"),
             'cc_number' => $details['pan'],
             'amount' => '252.30',
             'expiry_month' => $details['expiry_month'],
@@ -111,7 +111,6 @@ class PaymentController extends Controller
             $purchase_result = $this->moneris->purchase($params);
 
             if ($purchase_result->was_successful()) {
-                dd($purchase_result);
                 dd('you got a payment success');
                 // HOORAY! Party like it's 1999.
             } else {
