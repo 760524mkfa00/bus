@@ -2,14 +2,7 @@
 
 namespace busRegistration\Http\Controllers\Admin;
 
-
-use busRegistration\Http\PaymentGateway\moneris\mpgAvsInfo;
-use busRegistration\Http\PaymentGateway\moneris\mpgCvdInfo;
-use busRegistration\Http\PaymentGateway\moneris\mpgHttpsPost;
-use busRegistration\Http\PaymentGateway\moneris\mpgRecur;
-use busRegistration\Http\PaymentGateway\moneris\mpgRequest;
-use busRegistration\Http\PaymentGateway\moneris\mpgTransaction;
-use busRegistration\Http\PaymentGateway\moneris\paymentActions;
+use busRegistration\Http\PaymentGateway\Moneris\lib\Moneris;
 use busRegistration\User;
 use busRegistration\Order;
 use Carbon\Carbon;
@@ -18,24 +11,32 @@ use busRegistration\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
-//
-//    protected $store_id;
-//
-//    protected $api_token;
+
 
     protected $paymentGateway;
 
+    protected $moneris;
 
-    public function __construct(PaymentActions $paymentActions)
+
+    public function __construct()
     {
 
         $this->middleware('auth');
 
-        $this->paymentGateway = $paymentActions;
+    }
 
-//        $this->store_id = env('MONERIS_ID');
-//
-//        $this->api_token = env('MONERIS_KEY');
+
+
+    public function config()
+    {
+        $this->moneris = Moneris::create(
+            array(
+                'api_key' => 'yesguy',
+                'store_id' => 'store1',
+                'environment' => Moneris::ENV_STAGING,
+                'require_avs' => true,
+                'require_cvd' => true
+            ));
     }
 
     public function index(Order $order)
@@ -82,14 +83,57 @@ class PaymentController extends Controller
             return back()->withErrors('You do not have access to this page');
         }
 
+        /**
+         * Make a purchase.
+         *
+         * @param array $params An associative array.
+         * 		Required:
+         *			- order_id string A unique transaction ID, up to 50 chars
+         * 			- cc_number int Any non-numeric characters will be stripped
+         *			- amount float
+         *			- expiry_month int 2 digit representation of the expiry month (01-12)
+         * 			- expiry_year int last two digits of the expiry year
+         * 			- avs_street_number string Up to 19 chars combined with street name
+         *			- avs_street_name string
+         * 			- avs_zipcode string Up to 10 chars
+         *			- cvd
+
+         */
+
         $details = $request->all();
-        $details['expdate'] = $details['expiry_year'] . $details['expiry_month'];
-        $details['custNumber'] = $order->parent_id;
-        $details['orderNumber'] = $order->order_number;
-        $details['amount'] = '10.30';
 
-        $this->paymentGateway->pay($details, $order);
 
+        $params = [
+            'order_id' => $order->order_number,
+            'cc_number' => $details['pan'],
+            'amount' => '10.30',
+            'expiry_month' => $details['expiry_month'],
+            'expiry_year' => $details['expiry_year'],
+            'avs_street_number' => $details['billing_address_number'],
+            'avs_street_name' => $details['billing_address_street'],
+            'avs_zipcode' => $details['billing_postal_code'],
+            'cvd' => $details['cvc']
+        ];
+
+
+        $this->config();
+
+        $errors = array();
+        $verification_result = $this->moneris->verify($params);
+
+//        if ($verification_result->was_successful() && $verification_result->passed_avs() && $verification_result->passed_cvd()) {
+//
+//            $purchase_result = $this->moneris->purchase($params);
+//
+//            if ($purchase_result->was_successful()) {
+//                // HOORAY! Party like it's 1999.
+//            } else {
+//                $errors[] = $purchase_result->error_message();
+//            }
+//
+//        }
+
+        dd($verification_result);
     }
 
 
