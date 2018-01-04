@@ -114,23 +114,23 @@ class PaymentController extends Controller
         } else {
             $transaction = $purchase_result->transaction()->response();
 
-            dd( (string) $transaction);
-
             $responseData = [
-                'TransID' => $transaction->TransID,
-                'ReferenceNum' => $transaction->ReferenceNum,
-                'AuthCode' => $transaction->AuthCode,
-                'TransDate' => $transaction->TransDate,
-                'TransAmount' => $transaction->TransAmount,
-                'CardType' => $transaction->CardType,
-                'ReceiptId' => $transaction->ReceiptId,
-                'TransTime' => $transaction->TransTime,
-                'Complete' => $transaction->Complete,
-                'Message' => $transaction->Message
+                'TransID' => (string) $transaction->receipt->TransID,
+                'ReferenceNum' => (string) $transaction->receipt->ReferenceNum,
+                'AuthCode' => (string) $transaction->receipt->AuthCode,
+                'TransDate' => (string) $transaction->receipt->TransDate,
+                'TransAmount' => (string) $transaction->receipt->TransAmount,
+                'CardType' => (string) $transaction->receipt->CardType,
+                'ReceiptId' => (string) $transaction->receipt->ReceiptId,
+                'TransTime' => (string) $transaction->receipt->TransTime,
+                'Complete' => (string) $transaction->receipt->Complete,
+                'Message' => (string) $transaction->receipt->Message
             ];
+
+            dd($responseData);
         }
 
-        dd($responseData);
+
 
     }
 
