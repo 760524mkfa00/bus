@@ -112,7 +112,7 @@ class PaymentController extends Controller
         } else if (! $purchase_result->was_successful()) {
             $errors[] = $purchase_result->error_message();
         } else {
-            dd('it worked!!');
+            dd($purchase_result);
             // OMG we're rich!
         }
     }
