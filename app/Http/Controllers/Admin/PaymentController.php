@@ -121,6 +121,8 @@ class PaymentController extends Controller
         $errors = array();
         $verification_result = $this->moneris->verify($params);
 
+        dd($verification_result);
+
         if ($verification_result->was_successful() && $verification_result->passed_avs() && $verification_result->passed_cvd()) {
 
             $purchase_result = $this->moneris->purchase($params);
