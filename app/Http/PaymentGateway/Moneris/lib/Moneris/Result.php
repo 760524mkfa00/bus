@@ -75,6 +75,7 @@ class Moneris_Result
         self::ERROR_DUPLICATE_TRANSACTION => 'Duplicate transaction attempt',
         self::ERROR_DECLINED => 'Declined',
         self::ERROR_NOT_AUTHORIZED => 'Not authorized',
+//        self::ERROR_DUPLICATE_ID => 'Duplicate order ID',
         self::ERROR_CVD => 'Invalid security code provided',
         self::ERROR_CVD_NO_MATCH => 'Provided security code did not match',
         self::ERROR_CVD_NOT_PROCESSED => 'Security code not processed',
@@ -269,7 +270,7 @@ class Moneris_Result
             switch ($receipt->ResponseCode) {
                 case '050':
                 case '074':
-                case 'null':
+                case NULL:
                     $this->error_code(Moneris_Result::ERROR_SYSTEM_UNAVAILABLE);
                     break;
                 case '051':
