@@ -27,12 +27,12 @@ class PaymentController extends Controller
 
 
 
+//                'api_key' => env('MONERIS_KEY'),
+//                'store_id' => env('MONERIS_ID'),
     public function config()
     {
         $this->moneris = Moneris::create(
             array(
-//                'api_key' => env('MONERIS_KEY'),
-//                'store_id' => env('MONERIS_ID'),
                 'api_key' => env('yesguy'),
                 'store_id' => env('store5'),
                 'environment' => Moneris::ENV_STAGING_CA,
