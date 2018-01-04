@@ -104,22 +104,16 @@ class PaymentController extends Controller
         $this->config();
 
         $errors = array();
-        $verification_result = $this->moneris->verify($params);
+        $purchase_result = $this->moneris->purchase($params);
 
-        if ($verification_result->was_successful() && $verification_result->passed_avs() && $verification_result->passed_cvd()) {
-
-            $purchase_result = $this->moneris->purchase($params);
-
-            if ($purchase_result->was_successful()) {
-                dd('you got a payment success');
-                // HOORAY! Party like it's 1999.
-            } else {
-                $errors[] = $purchase_result->error_message();
-                dd($errors);
-            }
-
+        if ($purchase_result->was_successful() && ( $purchase->failed_avs() || $purchase_result->failed_cvd() )) {
+            $errors[] = $purchase_result->error_message();
+            $void = $this->moneris->void($purchase_result->transaction());
+        } else if (! $purchase_result->was_successful()) {
+            $errors[] = $purchase_result->error_message();
         } else {
-            return back()->withErrors($verification_result->error_message());
+            dd('it worked!!');
+            // OMG we're rich!
         }
 
 
