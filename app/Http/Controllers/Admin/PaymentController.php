@@ -34,8 +34,8 @@ class PaymentController extends Controller
                 'api_key' => env('MONERIS_KEY'),
                 'store_id' => env('MONERIS_ID'),
                 'environment' => Moneris::ENV_STAGING_CA,
-                'require_avs' => true,
-                'require_cvd' => true
+                'require_avs' => false,
+                'require_cvd' => false
             ));
     }
 
