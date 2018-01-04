@@ -112,8 +112,15 @@ class PaymentController extends Controller
         } else if (! $purchase_result->was_successful()) {
             $errors[] = $purchase_result->error_message();
         } else {
-            dd($purchase_result->transaction());
-            // OMG we're rich!
+            $transaction = $purchase_result->transaction()->response();
+
+            dd($transaction);
+
+            $responseData = [
+                'TransID' => $transaction->number(),
+
+            ];
+
         }
 
     }
