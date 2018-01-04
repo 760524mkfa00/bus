@@ -265,12 +265,12 @@ class Moneris_Result
         }
         // was it a successful transaction?
         // any response code greater than 49 is an error code:
-        if ((int) $receipt->ResponseCode >= 50) {
+        if ($receipt->ResponseCode >= 50) {
             // trying to make some sense of this... grouping them as best as I can:
             switch ($receipt->ResponseCode) {
                 case '050':
                 case '074':
-                case NULL:
+                case 'null':
                     $this->error_code(Moneris_Result::ERROR_SYSTEM_UNAVAILABLE);
                     break;
                 case '051':
