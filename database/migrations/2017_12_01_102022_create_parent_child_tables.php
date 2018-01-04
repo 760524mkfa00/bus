@@ -21,8 +21,13 @@ class CreateParentChildTables extends Migration
             $table->string('order_number', 50);
             $table->string('school_year', 4);
             $table->double('paid_amount', 8.2)->default(0);
+            $table->string('reference_number', 18)->nullable();
+            $table->string('transaction_number', 20)->nullable();
+            $table->string('card_type', 2)->nullable();
+            $table->string('message', 100)->nullable();
+            $table->string('auth_code', 8)->nullable();
+            $table->date('transaction_date')->nullable();
             $table->timestamps();
-
             $table->foreign('parent_id')->references('id')->on('users')->onDelete('cascade');
         });
 
