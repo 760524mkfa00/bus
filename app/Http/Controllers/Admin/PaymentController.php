@@ -33,9 +33,9 @@ class PaymentController extends Controller
     {
         $this->moneris = Moneris::create(
             array(
-                'api_key' => env('yesguy'),
-                'store_id' => env('store5'),
-                'environment' => Moneris::ENV_STAGING_CA,
+                'api_key' => 'yesguy',
+                'store_id' => 'store5',
+                'environment' => Moneris::ENV_TESTING,
                 'require_avs' => false,
                 'require_cvd' => false
             ));
@@ -123,8 +123,6 @@ class PaymentController extends Controller
 
         $errors = array();
         $verification_result = $this->moneris->verify($params);
-
-        dd($verification_result);
 
         if ($verification_result->was_successful() && $verification_result->passed_avs() && $verification_result->passed_cvd()) {
 
