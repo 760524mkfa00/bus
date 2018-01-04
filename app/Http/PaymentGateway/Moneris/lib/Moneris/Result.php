@@ -265,6 +265,7 @@ class Moneris_Result
         }
         // was it a successful transaction?
         // any response code greater than 49 is an error code:
+        dd($receipt->ResponseCode);
         if ($receipt->ResponseCode >= 50) {
             // trying to make some sense of this... grouping them as best as I can:
             switch ($receipt->ResponseCode) {
