@@ -33,7 +33,7 @@ class PaymentController extends Controller
             array(
                 'api_key' => 'yesguy',
                 'store_id' => 'store5',
-                'environment' => Moneris::ENV_STAGING,
+                'environment' => Moneris::ENV_TESTING_CA,
                 'require_avs' => true,
                 'require_cvd' => true
             ));
