@@ -126,9 +126,9 @@ class PaymentController extends Controller
 
         $order = $this->updateOrder($transaction, $order->id);
 
+        // TODO: send out route info with pass information or display an option to download passes on home screen.
 
-
-        // TODO: Mark the students within this order as paid
+        return route('home')->with('flash_message', 'Thank you for your payment, you will now be able to download bus passes for paid students.');
 
     }
 
@@ -183,9 +183,7 @@ class PaymentController extends Controller
         $order = Order::find($orderID);
         $order->update($responseData);
 
-        $amount = $order->paid_amount / $order->children()->count();
-
-        $order->children()->update(['paid' => 'yes', 'amount' => $amount]);
+        $order->children()->update(['paid' => 'yes']);
 
         return $order;
     }
