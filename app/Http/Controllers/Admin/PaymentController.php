@@ -168,16 +168,16 @@ class PaymentController extends Controller
     {
 
         $responseData = [
-            'TransID' => (string)$transaction->receipt->TransID,
-            'ReferenceNum' => (string)$transaction->receipt->ReferenceNum,
-            'AuthCode' => (string)$transaction->receipt->AuthCode,
-            'TransDate' => (string)$transaction->receipt->TransDate,
+            'transaction_number' => (string)$transaction->receipt->TransID,
+            'reference_number' => (string)$transaction->receipt->ReferenceNum,
+            'auth_code' => (string)$transaction->receipt->AuthCode,
+            'transaction_date' => (string)$transaction->receipt->TransDate,
             'paid_amount' => (string)$transaction->receipt->TransAmount,
-            'CardType' => (string)$transaction->receipt->CardType,
-            'ReceiptId' => (string)$transaction->receipt->ReceiptId,
-            'TransTime' => (string)$transaction->receipt->TransTime,
-            'Complete' => (string)$transaction->receipt->Complete,
-            'Message' => (string)$transaction->receipt->Message
+            'card_type' => (string)$transaction->receipt->CardType,
+            'receipt_id' => (string)$transaction->receipt->ReceiptId,
+            'transaction_time' => (string)$transaction->receipt->TransTime,
+            'transaction_complete' => (string)$transaction->receipt->Complete,
+            'message' => (string)$transaction->receipt->Message
         ];
 
         $order = Order::with('children')->find($orderID);
