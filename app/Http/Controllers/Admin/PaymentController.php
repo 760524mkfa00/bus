@@ -180,15 +180,12 @@ class PaymentController extends Controller
             'message' => (string)$transaction->receipt->Message
         ];
 
-        $order = Order::with('children')->find($orderID);
+        $order = Order::find($orderID);
         $order->update($responseData);
 
         $amount = $order->paid_amount / $order->children()->count();
 
-        foreach($order->children as $student)
-        {
-            $student->update(['paid' => 'yes', 'amount' => $amount]);
-        }
+        $order->children()->update(['paid' => 'yes', 'amount' => $amount]);
 
         return $order;
     }

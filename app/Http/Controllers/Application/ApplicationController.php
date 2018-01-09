@@ -54,7 +54,7 @@ class ApplicationController extends Controller
         $orders = Order::where(['parent_id' => $parent->id], ['school_year' => config('app.year')])->get();
 
         foreach($orders as $order){
-            if ($order->paid_amount === 0.0) return $order;
+            if ($order->paid_amount < 1) return $order;
         }
 
         return Order::create([

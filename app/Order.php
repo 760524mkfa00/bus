@@ -9,9 +9,7 @@ class Order extends Model
 
     protected $fillable = ['parent_id','order_number','school_year','paid_amount',
         'reference_number', 'transaction_number', 'card_type', 'message','auth_code',
-        'transaction_date'];
-
-
+        'transaction_date', 'receipt_id', 'transaction_time', 'transaction_complete'];
 
 
     /**
