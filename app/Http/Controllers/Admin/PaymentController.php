@@ -116,6 +116,8 @@ class PaymentController extends Controller
 
         $transaction = $this->purchase($params);
 
+        dd($transaction);
+
         if ((string)$transaction->receipt->Complete === 'false') {
             return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
         }
@@ -125,6 +127,8 @@ class PaymentController extends Controller
         }
 
         $order = $this->updateOrder($transaction);
+
+
 
         // TODO: Mark the students within this order as paid
 
@@ -177,6 +181,8 @@ class PaymentController extends Controller
             'Complete' => (string)$transaction->receipt->Complete,
             'Message' => (string)$transaction->receipt->Message
         ];
+
+        $order = Order::with('children')->find();
 
         return $responseData;
     }
