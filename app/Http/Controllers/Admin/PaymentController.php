@@ -126,7 +126,7 @@ class PaymentController extends Controller
             return back()->withErrors($this->errors);
         }
 
-        $order = $this->updateOrder($transaction);
+        $order = $this->updateOrder($transaction, $order->id);
 
 
 
@@ -166,7 +166,7 @@ class PaymentController extends Controller
         return $purchase_result->transaction()->response();
     }
 
-    private function updateOrder($transaction)
+    private function updateOrder($transaction, $orderID)
     {
 
         $responseData = [
@@ -174,7 +174,7 @@ class PaymentController extends Controller
             'ReferenceNum' => (string)$transaction->receipt->ReferenceNum,
             'AuthCode' => (string)$transaction->receipt->AuthCode,
             'TransDate' => (string)$transaction->receipt->TransDate,
-            'TransAmount' => (string)$transaction->receipt->TransAmount,
+            'paid_amount' => (string)$transaction->receipt->TransAmount,
             'CardType' => (string)$transaction->receipt->CardType,
             'ReceiptId' => (string)$transaction->receipt->ReceiptId,
             'TransTime' => (string)$transaction->receipt->TransTime,
@@ -182,9 +182,17 @@ class PaymentController extends Controller
             'Message' => (string)$transaction->receipt->Message
         ];
 
-        $order = Order::with('children')->find();
+        $order = Order::with('children')->find($orderID);
+        $order->update($responseData);
 
-        return $responseData;
+        $amount = $order->paid_amount / $order->children()->count();
+
+        foreach($order->children as $student)
+        {
+            $student->update(['paid' => 'yes', 'amount' => $amount]);
+        }
+
+        return $order;
     }
 
 }
