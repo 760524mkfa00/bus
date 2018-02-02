@@ -114,7 +114,7 @@ class PaymentController extends Controller
 
 
         $recurUnit = 'eom';
-        $startDate = '2018/03/31';
+        $startDate = '2018/03/25';
         $numRecurs = '4';
         $recurInterval = '10';
         $recurAmount = '31.00';
@@ -170,8 +170,8 @@ class PaymentController extends Controller
 
         /************************ Set AVS and CVD *****************************/
 
-        $mpgTxn->setAvsInfo($mpgAvsInfo);
-        $mpgTxn->setCvdInfo($mpgCvdInfo);
+//        $mpgTxn->setAvsInfo($mpgAvsInfo);
+//        $mpgTxn->setCvdInfo($mpgCvdInfo);
 
         /****************************** Recur Object *********************************/
 
