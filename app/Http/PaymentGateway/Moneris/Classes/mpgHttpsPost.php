@@ -35,8 +35,8 @@ class mpgHttpsPost
 
         $url = $this->mpgRequest->getURL();
 
-        $httpsPost = new httpsPost();
-        $httpsPost->httpsPost($url, $dataToSend);
+        $httpsPost = new httpsPost($url, $dataToSend);
+//        $httpsPost->httpsPost($url, $dataToSend);
         $response = $httpsPost->getHttpsResponse();
 
         if(!$response)
@@ -54,8 +54,8 @@ class mpgHttpsPost
                 "</receipt></response>";
         }
 
-        $this->mpgResponse = new mpgResponse();
-        $this->mpgResponse->mpgResponse($response);
+        $this->mpgResponse = new mpgResponse($response);
+//        $this->mpgResponse->mpgResponse($response);
 
     }
 

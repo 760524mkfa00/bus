@@ -101,23 +101,23 @@ class PaymentController extends Controller
 
         $details = $request->all();
 
-//        $recurUnit = 'eom';
-//        $startDate = '2018/02/02';
-//        $numRecurs = '4';
-//        $recurInterval = '10';
-//        $recurAmount = '31.00';
-//        $startNow = 'true';
+        $recurUnit = 'eom';
+        $startDate = '2018/02/02';
+        $numRecurs = '4';
+        $recurInterval = '10';
+        $recurAmount = '31.00';
+        $startNow = 'true';
 //
-//        $recurArray = array(
-//            'recur_unit'=>$recurUnit, // (day | week | month)
-//            'start_date'=>$startDate, //yyyy/mm/dd
-//            'num_recurs'=>$numRecurs,
-//            'start_now'=>$startNow,
-//            'period' => $recurInterval,
-//            'recur_amount'=> $recurAmount
-//        );
-//
-//        $mpgRecur = new mpgRecur($recurArray);
+        $recurArray = array(
+            'recur_unit'=>$recurUnit, // (day | week | month)
+            'start_date'=>$startDate, //yyyy/mm/dd
+            'num_recurs'=>$numRecurs,
+            'start_now'=>$startNow,
+            'period' => $recurInterval,
+            'recur_amount'=> $recurAmount
+        );
+
+        $mpgRecur = new mpgRecur($recurArray);
 //
 //
 //        $params = [
@@ -157,34 +157,38 @@ class PaymentController extends Controller
 
         /************************* Transactional Variables ****************************/
 
-        $orderId = 'ord-'.date("dmy-G:i:s");
-        $custId = 'student_number';
-        $creditCard = '5454545454545454';
-        $nowAmount = '10.00';
-        $expiryDate = '0912';
-        $cryptType = '7';
+//        $orderId = 'ord-'.date("dmy-G:i:s");
+//        $custId = 'student_number';
+//        $creditCard = '5454545454545454';
+//        $nowAmount = '10.00';
+//        $expiryDate = '0912';
+//        $cryptType = '7';
 
         /*********************** Recur Associative Array **********************/
 
-        $recurArray = array('recur_unit'=>$recurUnit, // (day | week | month)
-            'start_date'=>$startDate, //yyyy/mm/dd
-            'num_recurs'=>$numRecurs,
-            'start_now'=>$startNow,
-            'period' => $recurInterval,
-            'recur_amount'=> $recurAmount
-        );
-
-        $mpgRecur = new mpgRecur($recurArray);
+//        $recurArray = array('recur_unit'=>$recurUnit, // (day | week | month)
+//            'start_date'=>$startDate, //yyyy/mm/dd
+//            'num_recurs'=>$numRecurs,
+//            'start_now'=>$startNow,
+//            'period' => $recurInterval,
+//            'recur_amount'=> $recurAmount
+//        );
+//
+//        $mpgRecur = new mpgRecur($recurArray);
 
         /*********************** Transactional Associative Array **********************/
 
         $txnArray=array('type'=>'purchase',
-            'order_id'=>$orderId,
-            'cust_id'=>$custId,
-            'amount'=>$nowAmount,
-            'pan'=>$creditCard,
-            'expdate'=>$expiryDate,
-            'crypt_type'=>$cryptType
+            'order_id' => $order->order_number,
+            'cc_number' => $details['pan'],
+//            'amount' => $order->netAmount(),
+            'amount' => $recurAmount,
+            'expiry_month' => $details['expiry_month'],
+            'expiry_year' => $details['expiry_year'],
+            'avs_street_number' => $details['billing_address_number'],
+            'avs_street_name' => $details['billing_address_street'],
+            'avs_zipcode' => $details['billing_postal_code'],
+            'cvd' => $details['cvc']
         );
 
         /**************************** Transaction Object *****************************/
