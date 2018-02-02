@@ -119,7 +119,8 @@ class PaymentController extends Controller
         $params = [
             'order_id' => $order->order_number,
             'cc_number' => $details['pan'],
-            'amount' => $order->netAmount(),
+//            'amount' => $order->netAmount(),
+            'amount' => $recurAmount,
             'expiry_month' => $details['expiry_month'],
             'expiry_year' => $details['expiry_year'],
             'avs_street_number' => $details['billing_address_number'],
@@ -138,6 +139,8 @@ class PaymentController extends Controller
 
 
         $transaction = $this->purchase($params);
+
+        dd($transaction);
 
         if ((string)$transaction->receipt->Complete === 'false') {
             return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
