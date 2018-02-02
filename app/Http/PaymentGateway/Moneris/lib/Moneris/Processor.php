@@ -142,7 +142,6 @@ class Moneris_Processor
 //        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // value changed to 0, the connection succeeds regardless of the names in the certificate. Use that ability with caution
         $response = curl_exec($ch);
 
-        dd($response);
         curl_close($ch);
         // if the response fails for any reason, just use some stock XML
         // also taken directly from mpgClasses:

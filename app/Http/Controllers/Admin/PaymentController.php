@@ -140,7 +140,7 @@ class PaymentController extends Controller
 
         $transaction = $this->purchase($params);
 
-//        dd($transaction);
+        dd($transaction->getRecurSuccess());
 
         if ((string)$transaction->receipt->Complete === 'false') {
             return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
