@@ -97,6 +97,24 @@ class PaymentController extends Controller
 
         $details = $request->all();
 
+        $recurUnit = 'eom';
+        $startDate = '2018/02/02';
+        $numRecurs = '4';
+        $recurInterval = '10';
+        $recurAmount = '31.00';
+        $startNow = 'true';
+
+//        $recurArray = array(
+//            'recur_unit'=>$recurUnit, // (day | week | month)
+//            'start_date'=>$startDate, //yyyy/mm/dd
+//            'num_recurs'=>$numRecurs,
+//            'start_now'=>$startNow,
+//            'period' => $recurInterval,
+//            'recur_amount'=> $recurAmount
+//        );
+//
+//        $mpgRecur = new mpgRecur($recurArray);
+
 
         $params = [
             'order_id' => $order->order_number,
@@ -107,7 +125,15 @@ class PaymentController extends Controller
             'avs_street_number' => $details['billing_address_number'],
             'avs_street_name' => $details['billing_address_street'],
             'avs_zipcode' => $details['billing_postal_code'],
-            'cvd' => $details['cvc']
+            'cvd' => $details['cvc'],
+
+            'recur_unit'=>$recurUnit, // (day | week | month)
+            'start_date'=>$startDate, //yyyy/mm/dd
+            'num_recurs'=>$numRecurs,
+            'start_now'=>$startNow,
+            'period' => $recurInterval,
+            'recur_amount'=> $recurAmount
+
         ];
 
 
