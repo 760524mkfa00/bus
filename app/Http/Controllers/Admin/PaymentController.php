@@ -140,7 +140,7 @@ class PaymentController extends Controller
 
         $transaction = $this->purchase($params);
 
-        dd($transaction);
+//        dd($transaction);
 
         if ((string)$transaction->receipt->Complete === 'false') {
             return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
@@ -179,6 +179,8 @@ class PaymentController extends Controller
         $this->config();
 
         $purchase_result = $this->moneris->purchase($params);
+
+        dd($purchase_result);
 
         if ($purchase_result->was_successful() && ($purchase_result->failed_avs() || $purchase_result->failed_cvd())) {
             $this->errors = $purchase_result->error_message();
