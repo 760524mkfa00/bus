@@ -26,9 +26,6 @@ class PaymentController extends Controller
         $this->middleware('auth');
 
     }
-
-
-
 //                'api_key' => env('MONERIS_KEY'),
 //                'store_id' => env('MONERIS_ID'),
     public function config()
@@ -128,7 +125,7 @@ class PaymentController extends Controller
 
         // TODO: send out route info with pass information or display an option to download passes on home screen.
 
-        return route('home')->with('flash_message', 'Thank you for your payment, you will now be able to download bus passes for paid students.');
+        return \Redirect::route('home')->with('flash_message', 'Thank you for your payment, you will now be able to download bus passes for paid students.');
 
     }
 
