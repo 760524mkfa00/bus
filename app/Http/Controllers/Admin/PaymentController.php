@@ -180,7 +180,6 @@ class PaymentController extends Controller
 
         $purchase_result = $this->moneris->purchase($params);
 
-        dd($purchase_result->transaction());
 
         if ($purchase_result->was_successful() && ($purchase_result->failed_avs() || $purchase_result->failed_cvd())) {
             $this->errors = $purchase_result->error_message();
