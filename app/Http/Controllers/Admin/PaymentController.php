@@ -137,11 +137,10 @@ class PaymentController extends Controller
         $txnArray=array(
             'type'=>'purchase',
             'order_id' => $order->order_number,
-            'cc_number' => $details['pan'],
-//            'amount' => $order->netAmount(),
             'amount' => $recurAmount,
-            'expiry_month' => $details['expiry_month'],
-            'expiry_year' => $details['expiry_year'],
+            'pan' => $details['pan'],
+            'expdate' => $details['expiry_year'] . $details['expiry_month'],
+            'crypt_type' => '7'
         );
 
         $avsTemplate = array(
