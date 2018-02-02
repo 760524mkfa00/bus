@@ -2,6 +2,8 @@
 
 namespace busRegistration\Http\Controllers\Admin;
 
+use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgAvsInfo;
+use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgCvdInfo;
 use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgHttpsPost;
 use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgRecur;
 use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgRequest;
