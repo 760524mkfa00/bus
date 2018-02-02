@@ -152,6 +152,8 @@ class Moneris_Processor
         if ($xml === false) {
             return simplexml_load_string(self::$_error_response);
         }
+
+        dd($xml);
         // force fail AVS for testing
         //$xml->receipt->AvsResultCode = 'N';
         // force fail CVD for testing
