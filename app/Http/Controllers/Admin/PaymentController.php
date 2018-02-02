@@ -101,13 +101,23 @@ class PaymentController extends Controller
 
         $details = $request->all();
 
+
+
+
+
+        /**************************** Request Variables *******************************/
+
+        $store_id = 'store5';
+        $api_token = 'yesguy';
+
+
         $recurUnit = 'eom';
         $startDate = '2018/03/31';
         $numRecurs = '4';
         $recurInterval = '10';
         $recurAmount = '31.00';
         $startNow = 'true';
-//
+
         $recurArray = array(
             'recur_unit'=>$recurUnit, // (day | week | month)
             'start_date'=>$startDate, //yyyy/mm/dd
@@ -118,82 +128,48 @@ class PaymentController extends Controller
         );
 
         $mpgRecur = new mpgRecur($recurArray);
-//
-//
-//        $params = [
-//            'order_id' => $order->order_number,
-//            'cc_number' => $details['pan'],
-////            'amount' => $order->netAmount(),
-//            'amount' => $recurAmount,
-//            'expiry_month' => $details['expiry_month'],
-//            'expiry_year' => $details['expiry_year'],
-//            'avs_street_number' => $details['billing_address_number'],
-//            'avs_street_name' => $details['billing_address_street'],
-//            'avs_zipcode' => $details['billing_postal_code'],
-//            'cvd' => $details['cvc'],
-//
-//            'recur_unit'=>$recurUnit, // (day | week | month)
-//            'start_date'=>$startDate, //yyyy/mm/dd
-//            'num_recurs'=>$numRecurs,
-//            'start_now'=>$startNow,
-//            'period' => $recurInterval,
-//            'recur_amount'=> $recurAmount
 
-//        ];
-
-
-        /**************************** Request Variables *******************************/
-
-        $store_id = 'store5';
-        $api_token = 'yesguy';
-
-        /********************************* Recur Variables ****************************/
-        $recurUnit = 'eom';
-        $startDate = '2018/11/30';
-        $numRecurs = '4';
-        $recurInterval = '10';
-        $recurAmount = '31.00';
-        $startNow = 'true';
-
-        /************************* Transactional Variables ****************************/
-
-//        $orderId = 'ord-'.date("dmy-G:i:s");
-//        $custId = 'student_number';
-//        $creditCard = '5454545454545454';
-//        $nowAmount = '10.00';
-//        $expiryDate = '0912';
-//        $cryptType = '7';
-
-        /*********************** Recur Associative Array **********************/
-
-//        $recurArray = array('recur_unit'=>$recurUnit, // (day | week | month)
-//            'start_date'=>$startDate, //yyyy/mm/dd
-//            'num_recurs'=>$numRecurs,
-//            'start_now'=>$startNow,
-//            'period' => $recurInterval,
-//            'recur_amount'=> $recurAmount
-//        );
-//
-//        $mpgRecur = new mpgRecur($recurArray);
 
         /*********************** Transactional Associative Array **********************/
 
-        $txnArray=array('type'=>'purchase',
+        $txnArray=array(
+            'type'=>'purchase',
             'order_id' => $order->order_number,
             'cc_number' => $details['pan'],
 //            'amount' => $order->netAmount(),
             'amount' => $recurAmount,
             'expiry_month' => $details['expiry_month'],
             'expiry_year' => $details['expiry_year'],
+        );
+
+        $avsTemplate = array(
             'avs_street_number' => $details['billing_address_number'],
             'avs_street_name' => $details['billing_address_street'],
-            'avs_zipcode' => $details['billing_postal_code'],
-            'cvd' => $details['cvc']
+            'avs_zipcode' => $details['billing_postal_code']
         );
+
+        $cvdTemplate = array(
+            'cvd_indicator' => '1',
+            'cvd_value' => $details['cvc']
+        );
+
+        /************************** AVS Object ********************************/
+
+        $mpgAvsInfo = new mpgAvsInfo ($avsTemplate);
+
+        /************************** CVD Object ********************************/
+
+        $mpgCvdInfo = new mpgCvdInfo ($cvdTemplate);
+
 
         /**************************** Transaction Object *****************************/
 
         $mpgTxn = new mpgTransaction($txnArray);
+
+        /************************ Set AVS and CVD *****************************/
+
+        $mpgTxn->setAvsInfo($mpgAvsInfo);
+        $mpgTxn->setCvdInfo($mpgCvdInfo);
 
         /****************************** Recur Object *********************************/
 
