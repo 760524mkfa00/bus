@@ -113,7 +113,7 @@ class PaymentController extends Controller
         $api_token = 'yesguy';
 
 
-        $recurUnit = 'eom';
+        $recurUnit = 'month';
         $startDate = '2018/03/25';
         $numRecurs = '4';
         $recurInterval = '10';
