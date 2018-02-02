@@ -2,6 +2,10 @@
 
 namespace busRegistration\Http\Controllers\Admin;
 
+use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgHttpsPost;
+use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgRecur;
+use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgRequest;
+use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgTransaction;
 use busRegistration\Http\PaymentGateway\Moneris\lib\Moneris;
 use busRegistration\User;
 use busRegistration\Order;
@@ -97,15 +101,72 @@ class PaymentController extends Controller
 
         $details = $request->all();
 
+//        $recurUnit = 'eom';
+//        $startDate = '2018/02/02';
+//        $numRecurs = '4';
+//        $recurInterval = '10';
+//        $recurAmount = '31.00';
+//        $startNow = 'true';
+//
+//        $recurArray = array(
+//            'recur_unit'=>$recurUnit, // (day | week | month)
+//            'start_date'=>$startDate, //yyyy/mm/dd
+//            'num_recurs'=>$numRecurs,
+//            'start_now'=>$startNow,
+//            'period' => $recurInterval,
+//            'recur_amount'=> $recurAmount
+//        );
+//
+//        $mpgRecur = new mpgRecur($recurArray);
+//
+//
+//        $params = [
+//            'order_id' => $order->order_number,
+//            'cc_number' => $details['pan'],
+////            'amount' => $order->netAmount(),
+//            'amount' => $recurAmount,
+//            'expiry_month' => $details['expiry_month'],
+//            'expiry_year' => $details['expiry_year'],
+//            'avs_street_number' => $details['billing_address_number'],
+//            'avs_street_name' => $details['billing_address_street'],
+//            'avs_zipcode' => $details['billing_postal_code'],
+//            'cvd' => $details['cvc'],
+//
+//            'recur_unit'=>$recurUnit, // (day | week | month)
+//            'start_date'=>$startDate, //yyyy/mm/dd
+//            'num_recurs'=>$numRecurs,
+//            'start_now'=>$startNow,
+//            'period' => $recurInterval,
+//            'recur_amount'=> $recurAmount
+
+//        ];
+
+
+        /**************************** Request Variables *******************************/
+
+        $store_id = 'store5';
+        $api_token = 'yesguy';
+
+        /********************************* Recur Variables ****************************/
         $recurUnit = 'eom';
-        $startDate = '2018/02/02';
+        $startDate = '2018/11/30';
         $numRecurs = '4';
         $recurInterval = '10';
         $recurAmount = '31.00';
         $startNow = 'true';
 
-        $recurArray = array(
-            'recur_unit'=>$recurUnit, // (day | week | month)
+        /************************* Transactional Variables ****************************/
+
+        $orderId = 'ord-'.date("dmy-G:i:s");
+        $custId = 'student_number';
+        $creditCard = '5454545454545454';
+        $nowAmount = '10.00';
+        $expiryDate = '0912';
+        $cryptType = '7';
+
+        /*********************** Recur Associative Array **********************/
+
+        $recurArray = array('recur_unit'=>$recurUnit, // (day | week | month)
             'start_date'=>$startDate, //yyyy/mm/dd
             'num_recurs'=>$numRecurs,
             'start_now'=>$startNow,
@@ -115,45 +176,80 @@ class PaymentController extends Controller
 
         $mpgRecur = new mpgRecur($recurArray);
 
+        /*********************** Transactional Associative Array **********************/
 
-        $params = [
-            'order_id' => $order->order_number,
-            'cc_number' => $details['pan'],
-//            'amount' => $order->netAmount(),
-            'amount' => $recurAmount,
-            'expiry_month' => $details['expiry_month'],
-            'expiry_year' => $details['expiry_year'],
-            'avs_street_number' => $details['billing_address_number'],
-            'avs_street_name' => $details['billing_address_street'],
-            'avs_zipcode' => $details['billing_postal_code'],
-            'cvd' => $details['cvc'],
+        $txnArray=array('type'=>'purchase',
+            'order_id'=>$orderId,
+            'cust_id'=>$custId,
+            'amount'=>$nowAmount,
+            'pan'=>$creditCard,
+            'expdate'=>$expiryDate,
+            'crypt_type'=>$cryptType
+        );
 
-            'recur_unit'=>$recurUnit, // (day | week | month)
-            'start_date'=>$startDate, //yyyy/mm/dd
-            'num_recurs'=>$numRecurs,
-            'start_now'=>$startNow,
-            'period' => $recurInterval,
-            'recur_amount'=> $recurAmount
+        /**************************** Transaction Object *****************************/
 
-        ];
+        $mpgTxn = new mpgTransaction($txnArray);
+
+        /****************************** Recur Object *********************************/
+
+        $mpgTxn->setRecur($mpgRecur);
+
+        /****************************** Request Object *******************************/
+
+        $mpgRequest = new mpgRequest($mpgTxn);
+        $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
+        $mpgRequest->setTestMode(true); //false or comment out this line for production transactions
+
+        /***************************** HTTPS Post Object *****************************/
+
+        $mpgHttpPost = new mpgHttpsPost($store_id,$api_token,$mpgRequest);
+
+        /******************************* Response ************************************/
+
+        $mpgResponse=$mpgHttpPost->getMpgResponse();
+
+        print ("\nCardType = " . $mpgResponse->getCardType());
+        print("\nTransAmount = " . $mpgResponse->getTransAmount());
+        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
+        print("\nReceiptId = " . $mpgResponse->getReceiptId());
+        print("\nTransType = " . $mpgResponse->getTransType());
+        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
+        print("\nResponseCode = " . $mpgResponse->getResponseCode());
+        print("\nISO = " . $mpgResponse->getISO());
+        print("\nMessage = " . $mpgResponse->getMessage());
+        print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
+        print("\nAuthCode = " . $mpgResponse->getAuthCode());
+        print("\nComplete = " . $mpgResponse->getComplete());
+        print("\nTransDate = " . $mpgResponse->getTransDate());
+        print("\nTransTime = " . $mpgResponse->getTransTime());
+        print("\nTicket = " . $mpgResponse->getTicket());
+        print("\nTimedOut = " . $mpgResponse->getTimedOut());
+        print("\nRecurSuccess = " . $mpgResponse->getRecurSuccess());
 
 
-        $transaction = $this->purchase($params);
 
 
-        if ((string)$transaction->receipt->Complete === 'false') {
-            return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
-        }
 
-        if($this->errors) {
-            return back()->withErrors($this->errors);
-        }
 
-        $order = $this->updateOrder($transaction, $order->id);
+
+
+//        $transaction = $this->purchase($params);
+
+
+//        if ((string)$transaction->receipt->Complete === 'false') {
+//            return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
+//        }
+//
+//        if($this->errors) {
+//            return back()->withErrors($this->errors);
+//        }
+//
+//        $order = $this->updateOrder($transaction, $order->id);
 
         // TODO: send out route info with pass information or display an option to download passes on home screen.
 
-        return \Redirect::route('home')->with('flash_message', 'Thank you for your payment, you will now be able to download bus passes for paid students.');
+//        return \Redirect::route('home')->with('flash_message', 'Thank you for your payment, you will now be able to download bus passes for paid students.');
 
     }
 
@@ -219,34 +315,3 @@ class PaymentController extends Controller
 
 }
 
-
-
-##################### mpgRecur ##############################################
-
-class mpgRecur{
-
-    var $params;
-    var $recurTemplate = array('recur_unit','start_now','start_date','num_recurs','period','recur_amount');
-
-    function mpgRecur($params)
-    {
-        $this->params = $params;
-        if( (! $this->params['period']) )
-        {
-            $this->params['period'] = 1;
-        }
-    }
-
-    function toXML()
-    {
-        $xmlString = "";
-
-        foreach($this->recurTemplate as $tag)
-        {
-            $xmlString .= "<$tag>". $this->params[$tag] ."</$tag>";
-        }
-
-        return "<recur>$xmlString</recur>";
-    }
-
-}//end class

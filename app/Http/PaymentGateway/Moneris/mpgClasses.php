@@ -56,7 +56,6 @@ class httpsPost
 			echo "\n\nPostURL= " . $this->url;
 		}
 
-		dd($this->dataToSend);
 		
 		$g=new mpgGlobals();
 		$gArray=$g->getGlobals();

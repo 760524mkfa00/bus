@@ -126,7 +126,10 @@ class Moneris_Processor
                 $xml = str_replace('<' . $tag . '>', '<' . $r . $tag . '>', $xml);
                 $xml = str_replace('</' . $tag . '>', '</' . $r . $tag . '>', $xml);
             }
+
         }
+
+        dd($xml);
         //var_dump($url, $xml);
         // this is pulled directly from mpgClasses.php
         $ch = curl_init();
