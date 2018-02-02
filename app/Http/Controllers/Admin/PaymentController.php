@@ -130,9 +130,9 @@ class PaymentController extends Controller
 
             'recur_unit'=>$recurUnit, // (day | week | month)
             'start_date'=>$startDate, //yyyy/mm/dd
-            'num_recurs'=>$numRecurs,
-            'start_now'=>$startNow,
-            'period' => $recurInterval,
+//            'num_recurs'=>$numRecurs,
+//            'start_now'=>$startNow,
+//            'period' => $recurInterval,
             'recur_amount'=> $recurAmount
 
         ];
