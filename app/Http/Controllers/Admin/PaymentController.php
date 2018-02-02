@@ -102,7 +102,7 @@ class PaymentController extends Controller
         $details = $request->all();
 
         $recurUnit = 'eom';
-        $startDate = '2018/03/02';
+        $startDate = '2018/03/31';
         $numRecurs = '4';
         $recurInterval = '10';
         $recurAmount = '31.00';
