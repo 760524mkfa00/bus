@@ -2,13 +2,13 @@
 
 namespace busRegistration\Http\Controllers\Admin;
 
-use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgAvsInfo;
-use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgCvdInfo;
-use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgHttpsPost;
-use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgRecur;
-use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgRequest;
-use busRegistration\Http\PaymentGateway\Moneris\Classes\mpgTransaction;
-use busRegistration\Http\PaymentGateway\Moneris\lib\Moneris;
+use busRegistration\Http\PaymentGateway\Moneris\mpgAvsInfo;
+use busRegistration\Http\PaymentGateway\Moneris\mpgCvdInfo;
+use busRegistration\Http\PaymentGateway\Moneris\mpgHttpsPost;
+use busRegistration\Http\PaymentGateway\Moneris\mpgRecur;
+use busRegistration\Http\PaymentGateway\Moneris\mpgRequest;
+use busRegistration\Http\PaymentGateway\Moneris\mpgTransaction;
+
 use busRegistration\User;
 use busRegistration\Order;
 use Carbon\Carbon;
@@ -21,9 +21,9 @@ class PaymentController extends Controller
 
     protected $paymentGateway;
 
-    protected $moneris;
-
     protected $errors = [];
+
+    protected $mpgResponse;
 
 
     public function __construct()
@@ -34,17 +34,7 @@ class PaymentController extends Controller
     }
 //                'api_key' => env('MONERIS_KEY'),
 //                'store_id' => env('MONERIS_ID'),
-    public function config()
-    {
-        $this->moneris = Moneris::create(
-            array(
-                'api_key' => 'yesguy',
-                'store_id' => 'store5',
-                'environment' => Moneris::ENV_TESTING,
-                'require_avs' => true,
-                'require_cvd' => true
-            ));
-    }
+
 
     public function index(Order $order)
     {
@@ -75,24 +65,45 @@ class PaymentController extends Controller
     private function paymentOptions(Order $order)
     {
 
-//        TODO: set the year to use the config year +1 as this is the end date payments can go to.
-        $end = Carbon::parse('2018-06-01');
         $now = Carbon::now();
-        $length = $end->diffInMonths($now);
 
+        $paymentOptions = $this->paymentAmounts($order);
 
-        $paymentOptions['full'] = $order->netAmount();
-        $paymentOptions['split'] = $paymentOptions['full'] / 2;
-        $paymentOptions['multiple'] = $paymentOptions['full'] / $length;
         $paymentOptions['now'] = $now->format('M/D/YY');
         $paymentOptions['plusMonth'] = $now->addDays(30)->format('M d, Y');
-        $paymentOptions['multipleMonths'] = $length;
+        $paymentOptions['multipleMonths'] = $this->paymentLength();
 
         return $paymentOptions;
 
     }
 
+    protected function paymentLength() {
 
+//        TODO: set the year to use the config year +1 as this is the end date payments can go to.
+        $end = Carbon::parse('2018-10-01');
+        $now = Carbon::now();
+
+//        check the purchase has not passed the final purchase date.
+        if($now > $end) {
+            return Abort('402', 'Can not make payment to this account, the date has past');
+        }
+
+//        The difference between the final month a payment can be made and the current month. must be 1 or more
+        ($end->diffInMonths($now) == 0) ? $length = 1 : $length = $end->diffInMonths($now);
+
+        return $length;
+
+    }
+
+    protected function paymentAmounts(Order $order) {
+
+        $paymentAmount['full'] = $order->netAmount();
+        $paymentAmount['split'] = $paymentAmount['full'] / 2;
+        $paymentAmount['multiple'] = $paymentAmount['full'] / $this->paymentLength();
+
+        return $paymentAmount;
+
+    }
 
     public function submitPayment(Request $request, Order $order)
     {
@@ -103,121 +114,30 @@ class PaymentController extends Controller
 
         $details = $request->all();
 
+        $paymentAmounts = $this->paymentAmounts($order);
 
+        $length = ($details['paymentOption'] == 'split') ? 2 : $this->paymentLength();
 
-
-
-        /**************************** Request Variables *******************************/
-
-        $store_id = 'store5';
-        $api_token = 'yesguy';
-
-
-        $recurUnit = 'month';
-        $startDate = '2018/03/25';
-        $numRecurs = '4';
-        $recurInterval = '10';
-        $recurAmount = '31.00';
-        $startNow = 'true';
-
-        $recurArray = array(
-            'recur_unit'=>$recurUnit, // (day | week | month)
-            'start_date'=>$startDate, //yyyy/mm/dd
-            'num_recurs'=>$numRecurs,
-            'start_now'=>$startNow,
-            'period' => $recurInterval,
-            'recur_amount'=> $recurAmount
-        );
-
-        $mpgRecur = new mpgRecur($recurArray);
-
-
-        /*********************** Transactional Associative Array **********************/
-
-        $txnArray=array(
-            'type'=>'purchase',
-            'order_id' => $order->order_number,
-            'amount' => $recurAmount,
+        //gather all the parameters for the payment gateway
+        $params = [
+            'paymentOption' => $details['paymentOption'],
+            'cust_id' => $order->parent_id,
+            'order_id' => 'ord-' . $order->order_number,
+            'amount' => $paymentAmounts[$details['paymentOption']],
+            'numRecurs' => $length,
             'pan' => $details['pan'],
-            'expdate' => $details['expiry_year'] . $details['expiry_month'],
-            'crypt_type' => '7'
-        );
-
-        $avsTemplate = array(
+            'expiry_date' => $details['expiry_month'] . $details['expiry_year'],
+            'cvd_value' => $details['cvc'],
             'avs_street_number' => $details['billing_address_number'],
             'avs_street_name' => $details['billing_address_street'],
-            'avs_zipcode' => $details['billing_postal_code']
-        );
+            'avs_zipcode' => $details['billing_postal_code'],
+            'avs_email' => $details['email']
 
-        $cvdTemplate = array(
-            'cvd_indicator' => '1',
-            'cvd_value' => $details['cvc']
-        );
+        ];
 
-        /************************** AVS Object ********************************/
+        $transaction = $this->purchase($params);
 
-        $mpgAvsInfo = new mpgAvsInfo ($avsTemplate);
-
-        /************************** CVD Object ********************************/
-
-        $mpgCvdInfo = new mpgCvdInfo ($cvdTemplate);
-
-
-        /**************************** Transaction Object *****************************/
-
-        $mpgTxn = new mpgTransaction($txnArray);
-
-        /************************ Set AVS and CVD *****************************/
-
-        $mpgTxn->setAvsInfo($mpgAvsInfo);
-        $mpgTxn->setCvdInfo($mpgCvdInfo);
-
-        /****************************** Recur Object *********************************/
-
-        $mpgTxn->setRecur($mpgRecur);
-
-        /****************************** Request Object *******************************/
-
-        $mpgRequest = new mpgRequest($mpgTxn);
-        $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
-        $mpgRequest->setTestMode(true); //false or comment out this line for production transactions
-
-        /***************************** HTTPS Post Object *****************************/
-
-        $mpgHttpPost = new mpgHttpsPost($store_id,$api_token,$mpgRequest);
-
-        /******************************* Response ************************************/
-
-        $mpgResponse=$mpgHttpPost->getMpgResponse();
-
-        print ("\nCardType = " . $mpgResponse->getCardType());
-        print("\nTransAmount = " . $mpgResponse->getTransAmount());
-        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
-        print("\nReceiptId = " . $mpgResponse->getReceiptId());
-        print("\nTransType = " . $mpgResponse->getTransType());
-        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
-        print("\nResponseCode = " . $mpgResponse->getResponseCode());
-        print("\nISO = " . $mpgResponse->getISO());
-        print("\nMessage = " . $mpgResponse->getMessage());
-        print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
-        print("\nAuthCode = " . $mpgResponse->getAuthCode());
-        print("\nComplete = " . $mpgResponse->getComplete());
-        print("\nTransDate = " . $mpgResponse->getTransDate());
-        print("\nTransTime = " . $mpgResponse->getTransTime());
-        print("\nTicket = " . $mpgResponse->getTicket());
-        print("\nTimedOut = " . $mpgResponse->getTimedOut());
-        print("\nRecurSuccess = " . $mpgResponse->getRecurSuccess());
-
-
-
-
-
-
-
-
-//        $transaction = $this->purchase($params);
-
-
+        dd($transaction);
 //        if ((string)$transaction->receipt->Complete === 'false') {
 //            return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
 //        }
@@ -252,19 +172,127 @@ class PaymentController extends Controller
      */
     private function purchase($params)
     {
-        $this->config();
 
-        $purchase_result = $this->moneris->purchase($params);
+        /************************* Transactional Variables ****************************/
+        $type = 'purchase';
+        $cust_id = $params['cust_id'];
+        $order_id = $params['order_id'];
+        $amount = $params['amount'];
+        $pan = $params['pan'];
+        $expiry_date = $params['expiry_date'];
+        $crypt = '7';
+
+        /************************** CVD Variables *****************************/
+
+        $cvd_indicator = '1';
+        $cvd_value = $params['cvd_value'];
+
+        /************************** AVS Variables *****************************/
+
+        $avs_street_number = $params['avs_street_number'];
+        $avs_street_name = $params['avs_street_name'];
+        $avs_zipcode = $params['avs_zipcode'];
+        $avs_email = $params['avs_email'];
 
 
-        if ($purchase_result->was_successful() && ($purchase_result->failed_avs() || $purchase_result->failed_cvd())) {
-            $this->errors = $purchase_result->error_message();
-            $void = $this->moneris->void($purchase_result->transaction());
-        } else if (!$purchase_result->was_successful()) {
-            $this->errors = $purchase_result->error_message();
+        $avsTemplate = array(
+            'avs_street_number'=> $avs_street_number,
+            'avs_street_name' => $avs_street_name,
+            'avs_zipcode' => $avs_zipcode,
+            'avs_email' => $avs_email,
+        );
+
+        /********************** CVD Associative Array *************************/
+
+        $cvdTemplate = array(
+            'cvd_indicator' => $cvd_indicator,
+            'cvd_value' => $cvd_value
+        );
+
+        /************************** AVS Object ********************************/
+
+        $mpgAvsInfo = new mpgAvsInfo ($avsTemplate);
+
+        /************************** CVD Object ********************************/
+
+        $mpgCvdInfo = new mpgCvdInfo ($cvdTemplate);
+
+        /***************** Transactional Associative Array ********************/
+
+        $txnArray=array(
+            'type'=>$type,
+            'order_id'=>$order_id,
+            'cust_id'=>$cust_id,
+            'amount'=>$amount,
+            'pan'=>$pan,
+            'expdate'=>$expiry_date,
+            'crypt_type'=>$crypt
+        );
+
+        /********************** Transaction Object ****************************/
+
+        $mpgTxn = new mpgTransaction($txnArray);
+
+
+
+
+        /******** Check if they want to setup a recurring payment *************/
+
+        if($params['paymentOption'] != 'full') {
+
+            /********************************* Recur Variables ****************************/
+            $recurUnit = 'eom';
+            $startDate = Carbon::now();
+            $numRecurs = $params['numRecurs'];;
+            $recurInterval = '10';
+            $recurAmount = $params['amount'];
+            $startNow = 'true';
+
+            /*********************** Recur Associative Array **********************/
+
+            $recurArray = array('recur_unit'=>$recurUnit, // (day | week | month)
+                'start_date'=>$startDate, //yyyy/mm/dd
+                'num_recurs'=>$numRecurs,
+                'start_now'=>$startNow,
+                'period' => $recurInterval,
+                'recur_amount'=> $recurAmount
+            );
+
+            $mpgRecur = new mpgRecur($recurArray);
+
+            /****************************** Recur Object *********************************/
+
+            $mpgTxn->setRecur($mpgRecur);
+
         }
 
-        return $purchase_result->transaction()->response();
+
+
+        /************************ Set AVS and CVD *****************************/
+
+        $mpgTxn->setAvsInfo($mpgAvsInfo);
+        $mpgTxn->setCvdInfo($mpgCvdInfo);
+
+        /************************ Request Object ******************************/
+
+        $mpgRequest = new mpgRequest($mpgTxn);
+        $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
+        $mpgRequest->setTestMode(true); //false or comment out this line for production transactions
+
+        /*********************** HTTPS Post Object ****************************/
+
+
+        $mpgHttpPost = new mpgHttpsPost('store5','yesguy',$mpgRequest);
+
+        /*************************** Response *********************************/
+
+        return $mpgHttpPost->getMpgResponse();
+//        $this->mpgResponse = $mpgHttpPost->getMpgResponse();
+//
+//        return;
+
+
+
     }
 
     private function updateOrder($transaction, $orderID)
