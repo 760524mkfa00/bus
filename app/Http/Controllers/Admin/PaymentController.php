@@ -271,7 +271,7 @@ class PaymentController extends Controller
         /************************ Set AVS and CVD *****************************/
 
 //        $mpgTxn->setAvsInfo($mpgAvsInfo);
-        $mpgTxn->setCvdInfo($mpgCvdInfo);
+//        $mpgTxn->setCvdInfo($mpgCvdInfo);
 
         /************************ Request Object ******************************/
 
