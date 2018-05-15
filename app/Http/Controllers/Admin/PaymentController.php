@@ -122,7 +122,7 @@ class PaymentController extends Controller
         $params = [
             'paymentOption' => $details['paymentOption'],
             'cust_id' => $order->parent_id,
-            'order_id' => 'kieran-' . $order->order_number,
+            'order_id' => 'ord-' . $order->order_number . date("dmy-G:i:s"),
             'amount' => $paymentAmounts[$details['paymentOption']],
             'numRecurs' => $length,
             'pan' => $details['pan'],
@@ -265,8 +265,6 @@ class PaymentController extends Controller
             $mpgTxn->setRecur($mpgRecur);
 
         }
-
-
 
         /************************ Set AVS and CVD *****************************/
 
