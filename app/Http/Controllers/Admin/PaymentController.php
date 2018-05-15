@@ -276,7 +276,7 @@ class PaymentController extends Controller
                 'num_recurs'=>$numRecurs,
                 'start_now'=>$startNow,
                 'period' => $recurInterval,
-                'recur_amount'=> $recurAmount
+                'recur_amount'=> number_format($recurAmount,2)
             );
 
             $mpgRecur = new mpgRecur($recurArray);
@@ -300,6 +300,7 @@ class PaymentController extends Controller
 
         /*********************** HTTPS Post Object ****************************/
 
+//        dd($mpgRequest);
 
         $mpgHttpPost = new mpgHttpsPost('monca02245','K3YMAVg8PG5MsqdLozBi',$mpgRequest);
 
