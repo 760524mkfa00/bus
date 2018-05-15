@@ -139,23 +139,23 @@ class PaymentController extends Controller
 
 
         print("\nCardType = " . $mpgResponse->getCardType());
-        print("\nTransAmount = " . $mpgResponse->getTransAmount());
-        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
-        print("\nReceiptId = " . $mpgResponse->getReceiptId());
-        print("\nTransType = " . $mpgResponse->getTransType());
-        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
-        print("\nResponseCode = " . $mpgResponse->getResponseCode());
-        print("\nISO = " . $mpgResponse->getISO());
-        print("\nMessage = " . $mpgResponse->getMessage());
-        print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
-        print("\nAuthCode = " . $mpgResponse->getAuthCode());
-        print("\nComplete = " . $mpgResponse->getComplete());
-        print("\nTransDate = " . $mpgResponse->getTransDate());
-        print("\nTransTime = " . $mpgResponse->getTransTime());
-        print("\nTicket = " . $mpgResponse->getTicket());
-        print("\nTimedOut = " . $mpgResponse->getTimedOut());
-        print("\nStatusCode = " . $mpgResponse->getStatusCode());
-        print("\nStatusMessage = " . $mpgResponse->getStatusMessage());
+        print("< /br>TransAmount = " . $mpgResponse->getTransAmount());
+        print("< /br>TxnNumber = " . $mpgResponse->getTxnNumber());
+        print("< /br>ReceiptId = " . $mpgResponse->getReceiptId());
+        print("< /br>TransType = " . $mpgResponse->getTransType());
+        print("< /br>ReferenceNum = " . $mpgResponse->getReferenceNum());
+        print("< /br>ResponseCode = " . $mpgResponse->getResponseCode());
+        print("< /br>ISO = " . $mpgResponse->getISO());
+        print("< /br>Message = " . $mpgResponse->getMessage());
+        print("< /br>IsVisaDebit = " . $mpgResponse->getIsVisaDebit());
+        print("< /br>AuthCode = " . $mpgResponse->getAuthCode());
+        print("< /br>Complete = " . $mpgResponse->getComplete());
+        print("< /br>TransDate = " . $mpgResponse->getTransDate());
+        print("< /br>TransTime = " . $mpgResponse->getTransTime());
+        print("< /br>Ticket = " . $mpgResponse->getTicket());
+        print("< /br>TimedOut = " . $mpgResponse->getTimedOut());
+        print("< /br>StatusCode = " . $mpgResponse->getStatusCode());
+        print("< /br>StatusMessage = " . $mpgResponse->getStatusMessage());
 //        if ((string)$transaction->receipt->Complete === 'false') {
 //            return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
 //        }
