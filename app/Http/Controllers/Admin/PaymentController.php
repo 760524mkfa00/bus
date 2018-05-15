@@ -135,9 +135,27 @@ class PaymentController extends Controller
 
         ];
 
-        $transaction = $this->purchase($params);
+        $mpgResponse = $this->purchase($params);
 
-        dd($transaction);
+
+        print("\nCardType = " . $mpgResponse->getCardType());
+        print("\nTransAmount = " . $mpgResponse->getTransAmount());
+        print("\nTxnNumber = " . $mpgResponse->getTxnNumber());
+        print("\nReceiptId = " . $mpgResponse->getReceiptId());
+        print("\nTransType = " . $mpgResponse->getTransType());
+        print("\nReferenceNum = " . $mpgResponse->getReferenceNum());
+        print("\nResponseCode = " . $mpgResponse->getResponseCode());
+        print("\nISO = " . $mpgResponse->getISO());
+        print("\nMessage = " . $mpgResponse->getMessage());
+        print("\nIsVisaDebit = " . $mpgResponse->getIsVisaDebit());
+        print("\nAuthCode = " . $mpgResponse->getAuthCode());
+        print("\nComplete = " . $mpgResponse->getComplete());
+        print("\nTransDate = " . $mpgResponse->getTransDate());
+        print("\nTransTime = " . $mpgResponse->getTransTime());
+        print("\nTicket = " . $mpgResponse->getTicket());
+        print("\nTimedOut = " . $mpgResponse->getTimedOut());
+        print("\nStatusCode = " . $mpgResponse->getStatusCode());
+        print("\nStatusMessage = " . $mpgResponse->getStatusMessage());
 //        if ((string)$transaction->receipt->Complete === 'false') {
 //            return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
 //        }
