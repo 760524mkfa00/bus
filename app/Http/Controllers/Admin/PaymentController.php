@@ -156,6 +156,12 @@ class PaymentController extends Controller
         print("\nTimedOut = " . $mpgResponse->getTimedOut()); echo '</br>';
         print("\nStatusCode = " . $mpgResponse->getStatusCode()); echo '</br>';
         print("\nStatusMessage = " . $mpgResponse->getStatusMessage());
+
+        if($params['paymentOption'] != 'full') {
+            echo '</br>';
+            print("\nRecurring billing success = " . $mpgResponse->getRecurSuccess());
+        }
+
 //        if ((string)$transaction->receipt->Complete === 'false') {
 //            return back()->withErrors('There was a problem with the transaction: ' . (string)$transaction->receipt->Message . '. The amount taken from your card was ' . (string)$transaction->receipt->TransAmount);
 //        }
