@@ -260,7 +260,7 @@ class PaymentController extends Controller
 
             /********************************* Recur Variables ****************************/
             $recurUnit = 'eom';
-            $startDate = Carbon::now();
+            $startDate = '2018/05/15';
             $numRecurs = $params['numRecurs'];;
             $recurInterval = '10';
             $recurAmount = $params['amount'];
