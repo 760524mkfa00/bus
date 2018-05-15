@@ -282,9 +282,11 @@ class PaymentController extends Controller
         /*********************** HTTPS Post Object ****************************/
 
 
-        $mpgHttpPost = new mpgHttpsPost('store5','yesguy',$mpgRequest);
+        $mpgHttpPost = new mpgHttpsPost('monca02245','K3YMAVg8PG5MsqdLozBi',$mpgRequest);
 
         /*************************** Response *********************************/
+
+
 
         return $mpgHttpPost->getMpgResponse();
 //        $this->mpgResponse = $mpgHttpPost->getMpgResponse();
