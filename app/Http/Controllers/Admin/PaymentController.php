@@ -258,9 +258,12 @@ class PaymentController extends Controller
 
         if($params['paymentOption'] != 'full') {
 
+            $date = new Carbon('first day of next month');
+
             /********************************* Recur Variables ****************************/
-            $recurUnit = 'eom';
-            $startDate = date('Y/m/d');
+            $recurUnit = 'month';
+            $startDate = $date->addDays(14)->format('Y/m/d');
+//            dd($startDate);
             $numRecurs = $params['numRecurs'];;
             $recurInterval = '10';
             $recurAmount = $params['amount'];
