@@ -177,7 +177,7 @@ class PaymentController extends Controller
         $type = 'purchase';
         $cust_id = $params['cust_id'];
         $order_id = $params['order_id'];
-        $amount = $params['amount'];
+        $amount = number_format($params['amount'],2);
         $pan = $params['pan'];
         $expiry_date = $params['expiry_date'];
         $crypt = '7';
