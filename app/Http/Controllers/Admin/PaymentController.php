@@ -259,8 +259,8 @@ class PaymentController extends Controller
         if($params['paymentOption'] != 'full') {
 
             /********************************* Recur Variables ****************************/
-            $recurUnit = 'eom';
-            $startDate = '2018/05/15';
+            $recurUnit = 'month';
+            $startDate = Carbon::now();
             $numRecurs = $params['numRecurs'];;
             $recurInterval = '10';
             $recurAmount = $params['amount'];
