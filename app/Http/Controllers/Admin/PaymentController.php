@@ -259,7 +259,7 @@ class PaymentController extends Controller
         if($params['paymentOption'] != 'full') {
 
             /********************************* Recur Variables ****************************/
-            $recurUnit = 'month';
+            $recurUnit = 'eom';
             $startDate = date('Y/m/d');
             $numRecurs = $params['numRecurs'];;
             $recurInterval = '10';
