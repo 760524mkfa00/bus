@@ -265,7 +265,7 @@ class PaymentController extends Controller
             $startDate = $date->addDays(14)->format('Y/m/d');
 //            dd($startDate);
             $numRecurs = $params['numRecurs'];;
-            $recurInterval = '10';
+            $recurInterval = '1';
             $recurAmount = $params['amount'];
             $startNow = 'true';
 
