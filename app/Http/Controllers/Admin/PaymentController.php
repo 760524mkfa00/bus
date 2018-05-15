@@ -122,7 +122,7 @@ class PaymentController extends Controller
         $params = [
             'paymentOption' => $details['paymentOption'],
             'cust_id' => $order->parent_id,
-            'order_id' => 'ord-' . $order->order_number,
+            'order_id' => 'kieran-' . $order->order_number,
             'amount' => $paymentAmounts[$details['paymentOption']],
             'numRecurs' => $length,
             'pan' => $details['pan'],
@@ -282,16 +282,16 @@ class PaymentController extends Controller
         /*********************** HTTPS Post Object ****************************/
 
 
-        $mpgHttpPost = new mpgHttpsPost('store3','password',$mpgRequest);
+        $mpgHttpPost = new mpgHttpsPost('3S9LVtore3','dp7G2B5KQ7TK',$mpgRequest);
 
         /*************************** Response *********************************/
 
 
 
         return $mpgHttpPost->getMpgResponse();
-//        $this->mpgResponse = $mpgHttpPost->getMpgResponse();
-//
-//        return;
+        $this->mpgResponse = $mpgHttpPost->getMpgResponse();
+
+        return;
 
 
 
